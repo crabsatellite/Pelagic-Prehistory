@@ -79,8 +79,8 @@ public class SimplePitchGeoModel<T extends LivingEntity & GeoEntity> extends Geo
         if(oBone.isPresent()) {
             final GeoBone bone = oBone.get();
             final Vec2 rotations = getHeadRotations(animatable, instanceId, animationState);
-            bone.setRotX(bone.getRotX() + rotations.x * getPitchMultiplier());
-            bone.setRotY(bone.getRotY() + rotations.y);
+            bone.setRotX(rotations.x * getPitchMultiplier());
+            bone.setRotY(rotations.y);
         }
     }
 

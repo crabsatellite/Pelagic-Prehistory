@@ -1,3 +1,0 @@
-v4.8.2
-
-- Fix triggered animations not applying on Singleton animatables when first used in multiplayer for other players (on Fabric)

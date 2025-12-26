@@ -40,6 +40,10 @@ public class AnalyzerBlockEntity extends PPBlockEntityBase<AnalyzerRecipe> {
     // TICKING //
 
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, AnalyzerBlockEntity blockEntity) {
+        // only run logic on server side
+        if(level.isClientSide()) {
+            return;
+        }
         if(blockEntity.hasRecipe(level)) {
             // update progress
             blockEntity.progress = Math.min(blockEntity.progress + 1, blockEntity.maxProgress);
@@ -75,18 +79,25 @@ public class AnalyzerBlockEntity extends PPBlockEntityBase<AnalyzerRecipe> {
     protected void assembleRecipe(Level level, Container input, AnalyzerRecipe recipe) {
         final ItemStack output = recipe.assemble(input, level.getRandom());
         if(output.isEmpty()) {
+            // still consume input even if no output (bad luck)
+            this.removeItem(0, 1);
+            this.resetProgress();
+            this.setChanged();
             return;
         }
         final IItemHandler itemHandler = this.itemHandler.orElse(EmptyHandler.INSTANCE);
         for(int i = 1, n = itemHandler.getSlots(); i < n; i++) {
             // insert item
-            if(itemHandler.insertItem(i, output, false).isEmpty()) {
+            if(itemHandler.insertItem(i, output.copy(), false).isEmpty()) {
                 // remove input
                 this.removeItem(0, 1);
                 this.resetProgress();
-                break;
+                this.setChanged();
+                return;
             }
         }
+        // if we reach here, all output slots are full - don't consume input, just reset progress
+        this.resetProgress();
     }
 
     @Override

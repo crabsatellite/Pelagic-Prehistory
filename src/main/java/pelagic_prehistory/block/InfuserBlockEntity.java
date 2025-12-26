@@ -36,6 +36,10 @@ public class InfuserBlockEntity extends PPBlockEntityBase<InfuserRecipe> {
     // TICKING //
 
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, InfuserBlockEntity blockEntity) {
+        // only run logic on server side
+        if(level.isClientSide()) {
+            return;
+        }
         if(blockEntity.hasRecipe(level)) {
             // update progress
             blockEntity.progress = Math.min(blockEntity.progress + 1, blockEntity.maxProgress);
@@ -74,11 +78,12 @@ public class InfuserBlockEntity extends PPBlockEntityBase<InfuserRecipe> {
             return;
         }
         final IItemHandler itemHandler = this.itemHandler.orElse(EmptyHandler.INSTANCE);
-        if(itemHandler.insertItem(2, output, false).isEmpty()) {
+        if(itemHandler.insertItem(2, output.copy(), false).isEmpty()) {
             // remove input
             this.removeItem(0, 1);
             this.removeItem(1, 1);
             this.resetProgress();
+            this.setChanged();
         }
     }
 

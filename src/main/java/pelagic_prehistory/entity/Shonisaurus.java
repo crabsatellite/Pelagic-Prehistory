@@ -34,18 +34,18 @@ import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 import pelagic_prehistory.PPRegistry;
 import pelagic_prehistory.entity.goal.FloppingGoal;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.UUID;
 
-public class Shonisaurus extends WaterAnimal implements NeutralMob, IAnimatable {
+public class Shonisaurus extends WaterAnimal implements NeutralMob, GeoEntity {
 
     // NEUTRAL MOB //
     private static final UniformInt ANGER_RANGE = TimeUtil.rangeOfSeconds(20, 39);
@@ -53,10 +53,10 @@ public class Shonisaurus extends WaterAnimal implements NeutralMob, IAnimatable 
     private UUID angerTarget;
 
     // GECKOLIB //
-    protected AnimationFactory instanceCache = GeckoLibUtil.createFactory(this);
-    protected static final AnimationBuilder ANIM_SWIM = new AnimationBuilder().addAnimation("swim");
-    protected static final AnimationBuilder ANIM_SWIM_FAST = new AnimationBuilder().addAnimation("swim_fast");
-    protected static final AnimationBuilder ANIM_DRY_OUT = new AnimationBuilder().addAnimation("dry_out");
+    protected AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    protected static final RawAnimation ANIM_SWIM = RawAnimation.begin().thenLoop("swim");
+    protected static final RawAnimation ANIM_SWIM_FAST = RawAnimation.begin().thenLoop("swim_fast");
+    protected static final RawAnimation ANIM_DRY_OUT = RawAnimation.begin().thenLoop("dry_out");
 
     public Shonisaurus(EntityType<? extends WaterAnimal> type, Level level) {
         super(type, level);
@@ -93,14 +93,14 @@ public class Shonisaurus extends WaterAnimal implements NeutralMob, IAnimatable 
     @Override
     public void aiStep() {
         super.aiStep();
-        if(!level.isClientSide()) {
-            this.updatePersistentAnger((ServerLevel) this.level, true);
+        if(!level().isClientSide()) {
+            this.updatePersistentAnger((ServerLevel) this.level(), true);
         }
     }
     @Override
     public void tick() {
         super.tick();
-        if(isInWater() && !level.getFluidState(new BlockPos(position().add(0, getBbHeight(), 0))).is(FluidTags.WATER)) {
+        if(isInWater() && !level().getFluidState(BlockPos.containing(position().add(0, getBbHeight(), 0))).is(FluidTags.WATER)) {
             setDeltaMovement(getDeltaMovement().add(0, -0.04D, 0));
         }
     }
@@ -221,7 +221,7 @@ public class Shonisaurus extends WaterAnimal implements NeutralMob, IAnimatable 
     @Override
     public void readAdditionalSaveData(final CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-        this.readPersistentAngerSaveData(this.level, tag);
+        this.readPersistentAngerSaveData(this.level(), tag);
     }
 
     @Override
@@ -232,25 +232,25 @@ public class Shonisaurus extends WaterAnimal implements NeutralMob, IAnimatable 
 
     //// GECKOLIB ////
 
-    private PlayState handleAnimation(AnimationEvent<Shonisaurus> event) {
+    private PlayState handleAnimation(AnimationState<Shonisaurus> state) {
         if(!isInWaterOrBubble()) {
-            event.getController().setAnimation(ANIM_DRY_OUT);
-        } else if(event.isMoving()) {
-            event.getController().setAnimation(ANIM_SWIM_FAST);
+            state.getController().setAnimation(ANIM_DRY_OUT);
+        } else if(state.isMoving()) {
+            state.getController().setAnimation(ANIM_SWIM_FAST);
         } else {
-            event.getController().setAnimation(ANIM_SWIM);
+            state.getController().setAnimation(ANIM_SWIM);
         }
-        event.getController().transitionLengthTicks = 6.0D;
+        state.getController().setTransitionLength(6);
         return PlayState.CONTINUE;
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController<>(this, "controller", 2F, this::handleAnimation));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 2, this::handleAnimation));
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return instanceCache;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
     }
 }

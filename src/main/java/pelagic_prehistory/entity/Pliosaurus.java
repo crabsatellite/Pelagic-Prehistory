@@ -35,18 +35,18 @@ import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 import pelagic_prehistory.PPRegistry;
 import pelagic_prehistory.entity.goal.FloppingGoal;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.UUID;
 
-public class Pliosaurus extends WaterAnimal implements IAnimatable, NeutralMob, Enemy {
+public class Pliosaurus extends WaterAnimal implements GeoEntity, NeutralMob, Enemy {
 
     // NEUTRAL MOB //
     private static final UniformInt ANGER_RANGE = TimeUtil.rangeOfSeconds(20, 39);
@@ -54,9 +54,9 @@ public class Pliosaurus extends WaterAnimal implements IAnimatable, NeutralMob, 
     private UUID angerTarget;
 
     // GECKOLIB //
-    protected AnimationFactory instanceCache = GeckoLibUtil.createFactory(this);
-    protected static final AnimationBuilder ANIM_SWIM = new AnimationBuilder().addAnimation("swim");
-    protected static final AnimationBuilder ANIM_IDLE_DRY = new AnimationBuilder().addAnimation("dry-out");
+    protected AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    protected static final RawAnimation ANIM_SWIM = RawAnimation.begin().thenLoop("swim");
+    protected static final RawAnimation ANIM_IDLE_DRY = RawAnimation.begin().thenLoop("dry-out");
 
     public Pliosaurus(EntityType<? extends WaterAnimal> type, Level level) {
         super(type, level);
@@ -95,8 +95,8 @@ public class Pliosaurus extends WaterAnimal implements IAnimatable, NeutralMob, 
     @Override
     public void aiStep() {
         super.aiStep();
-        if(!level.isClientSide()) {
-            this.updatePersistentAnger((ServerLevel) this.level, true);
+        if(!level().isClientSide()) {
+            this.updatePersistentAnger((ServerLevel) this.level(), true);
         }
     }
 
@@ -210,7 +210,7 @@ public class Pliosaurus extends WaterAnimal implements IAnimatable, NeutralMob, 
     @Override
     public void readAdditionalSaveData(final CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-        this.readPersistentAngerSaveData(this.level, tag);
+        this.readPersistentAngerSaveData(this.level(), tag);
     }
 
     @Override
@@ -221,22 +221,22 @@ public class Pliosaurus extends WaterAnimal implements IAnimatable, NeutralMob, 
 
     //// GECKOLIB ////
 
-    private PlayState handleAnimation(AnimationEvent<Pliosaurus> event) {
+    private PlayState handleAnimation(AnimationState<Pliosaurus> state) {
         if(isInWaterOrBubble()) {
-            event.getController().setAnimation(ANIM_SWIM);
+            state.getController().setAnimation(ANIM_SWIM);
         } else {
-            event.getController().setAnimation(ANIM_IDLE_DRY);
+            state.getController().setAnimation(ANIM_IDLE_DRY);
         }
         return PlayState.CONTINUE;
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController<>(this, "controller", 2F, this::handleAnimation));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 2, this::handleAnimation));
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return instanceCache;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
     }
 }

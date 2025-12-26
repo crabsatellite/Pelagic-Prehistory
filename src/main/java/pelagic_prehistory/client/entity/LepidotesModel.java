@@ -2,8 +2,8 @@ package pelagic_prehistory.client.entity;
 
 import net.minecraft.util.Mth;
 import pelagic_prehistory.entity.Lepidotes;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.processor.IBone;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.cache.object.GeoBone;
 
 import java.util.Optional;
 
@@ -14,17 +14,12 @@ public class LepidotesModel<T extends Lepidotes> extends SimplePitchGeoModel<T> 
     }
 
     @Override
-    public void setCustomAnimations(T animatable, int instanceId, AnimationEvent animationEvent) {
-        super.setCustomAnimations(animatable, instanceId, animationEvent);
+    protected Optional<GeoBone> getHeadBone() {
+        return getBone("Head");
     }
 
     @Override
-    protected Optional<IBone> getHeadBone() {
-        return Optional.ofNullable(getBone("Head"));
-    }
-
-    @Override
-    protected Optional<IBone> getBodyBone() {
-        return Optional.ofNullable(getBone("Lepidotes"));
+    protected Optional<GeoBone> getBodyBone() {
+        return getBone("Lepidotes");
     }
 }

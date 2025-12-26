@@ -3,7 +3,7 @@ package pelagic_prehistory.client.entity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.phys.Vec3;
 import pelagic_prehistory.entity.Irritator;
-import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class IrritatorRenderer<T extends Irritator> extends GeoEntityRenderer<T> {
 

@@ -6,16 +6,16 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec2;
 import pelagic_prehistory.PelagicPrehistory;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.model.provider.data.EntityModelData;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.constant.DataTickets;
+import software.bernie.geckolib.cache.object.GeoBone;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.model.data.EntityModelData;
 
 import java.util.Optional;
 
-public class SimplePitchGeoModel<T extends LivingEntity & IAnimatable> extends AnimatedGeoModel<T> {
+public class SimplePitchGeoModel<T extends LivingEntity & GeoEntity> extends GeoModel<T> {
 
     private final ResourceLocation modelLocation;
     private final ResourceLocation textureLocation;
@@ -44,50 +44,49 @@ public class SimplePitchGeoModel<T extends LivingEntity & IAnimatable> extends A
     }
 
     @Override
-    public void setCustomAnimations(T animatable, int instanceId, AnimationEvent animationEvent) {
-        super.setCustomAnimations(animatable, instanceId, animationEvent);
-        rotateBody(animatable, instanceId, animationEvent);
-        rotateHead(animatable, instanceId, animationEvent);
+    public void setCustomAnimations(T animatable, long instanceId, AnimationState<T> animationState) {
+        super.setCustomAnimations(animatable, instanceId, animationState);
+        rotateBody(animatable, instanceId, animationState);
+        rotateHead(animatable, instanceId, animationState);
     }
 
-    protected Optional<IBone> getBodyBone() {
-        return Optional.ofNullable(this.getBone("body"));
+    protected Optional<GeoBone> getBodyBone() {
+        return this.getBone("body");
     }
 
-    protected Optional<IBone> getHeadBone() {
-        return Optional.ofNullable(this.getBone("head"));
+    protected Optional<GeoBone> getHeadBone() {
+        return this.getBone("head");
     }
 
     protected float getPitchMultiplier() {
         return 1;
     }
 
-    protected void rotateBody(T animatable, int instanceId, AnimationEvent animationState) {
-        if(animatable.isOnGround()) {
+    protected void rotateBody(T animatable, long instanceId, AnimationState<T> animationState) {
+        if(animatable.onGround()) {
             return;
         }
-        Optional<IBone> bone = getBodyBone();
+        Optional<GeoBone> bone = getBodyBone();
         if(bone.isPresent()) {
             float xRot = (-1.0F) * animatable.getViewXRot(animationState.getPartialTick()) * getPitchMultiplier();
             float angle = (float) Math.toRadians(xRot);
-            bone.get().setRotationX(angle);
+            bone.get().setRotX(angle);
         }
     }
 
-    protected void rotateHead(T animatable, int instanceId, AnimationEvent animationState) {
-        Optional<IBone> oBone = getHeadBone();
+    protected void rotateHead(T animatable, long instanceId, AnimationState<T> animationState) {
+        Optional<GeoBone> oBone = getHeadBone();
         if(oBone.isPresent()) {
-            final IBone bone = oBone.get();
+            final GeoBone bone = oBone.get();
             final Vec2 rotations = getHeadRotations(animatable, instanceId, animationState);
-            bone.setRotationX(bone.getRotationX() + rotations.x * getPitchMultiplier());
-            bone.setRotationY(bone.getRotationY() + rotations.y);
+            bone.setRotX(bone.getRotX() + rotations.x * getPitchMultiplier());
+            bone.setRotY(bone.getRotY() + rotations.y);
         }
     }
 
-    protected Vec2 getHeadRotations(T animatable, int instanceId, AnimationEvent animationState) {
-        EntityModelData extraData = (EntityModelData) animationState.getExtraDataOfType(EntityModelData.class).get(0);
-        AnimationData manager = animatable.getFactory().getOrCreateAnimationData(instanceId);
-        int unpausedMultiplier = !Minecraft.getInstance().isPaused() || manager.shouldPlayWhilePaused ? 1 : 0;
-        return new Vec2(extraData.headPitch, extraData.netHeadYaw).scale(Mth.DEG_TO_RAD * unpausedMultiplier);
+    protected Vec2 getHeadRotations(T animatable, long instanceId, AnimationState<T> animationState) {
+        EntityModelData extraData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
+        int unpausedMultiplier = !Minecraft.getInstance().isPaused() ? 1 : 0;
+        return new Vec2(extraData.headPitch(), extraData.netHeadYaw()).scale(Mth.DEG_TO_RAD * unpausedMultiplier);
     }
 }

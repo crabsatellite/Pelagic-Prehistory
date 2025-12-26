@@ -34,19 +34,19 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import pelagic_prehistory.entity.goal.FloppingGoal;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-public class Bawitius extends WaterAnimal implements NeutralMob, IAnimatable {
+public class Bawitius extends WaterAnimal implements NeutralMob, GeoEntity {
 
     // NEUTRAL MOB //
     private static final UniformInt ANGER_RANGE = TimeUtil.rangeOfSeconds(20, 39);
@@ -54,8 +54,8 @@ public class Bawitius extends WaterAnimal implements NeutralMob, IAnimatable {
     private UUID angerTarget;
 
     // GECKOLIB //
-    protected AnimationFactory instanceCache = GeckoLibUtil.createFactory(this);
-    protected static final AnimationBuilder ANIM_IDLE = new AnimationBuilder().addAnimation("swim");
+    protected AnimatableInstanceCache instanceCache = GeckoLibUtil.createInstanceCache(this);
+    protected static final RawAnimation ANIM_IDLE = RawAnimation.begin().thenLoop("swim");
 
     public Bawitius(EntityType<? extends WaterAnimal> type, Level level) {
         super(type, level);
@@ -93,8 +93,8 @@ public class Bawitius extends WaterAnimal implements NeutralMob, IAnimatable {
     @Override
     public void aiStep() {
         super.aiStep();
-        if(!level.isClientSide()) {
-            this.updatePersistentAnger((ServerLevel) this.level, true);
+        if(!level().isClientSide()) {
+            this.updatePersistentAnger((ServerLevel) this.level(), true);
         }
     }
 
@@ -170,7 +170,7 @@ public class Bawitius extends WaterAnimal implements NeutralMob, IAnimatable {
     @Override
     public void readAdditionalSaveData(final CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-        readPersistentAngerSaveData(this.level, tag);
+        readPersistentAngerSaveData(this.level(), tag);
     }
 
     @Override
@@ -181,18 +181,18 @@ public class Bawitius extends WaterAnimal implements NeutralMob, IAnimatable {
 
     //// GECKOLIB ////
 
-    private PlayState handleAnimation(AnimationEvent<Bawitius> event) {
+    private PlayState handleAnimation(AnimationState<Bawitius> event) {
         event.getController().setAnimation(ANIM_IDLE);
         return PlayState.CONTINUE;
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController<>(this, "controller", 2F, this::handleAnimation));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 2, this::handleAnimation));
     }
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return instanceCache;
     }
     
@@ -213,7 +213,7 @@ public class Bawitius extends WaterAnimal implements NeutralMob, IAnimatable {
 
         @Override
         public boolean canUse() {
-            return entity.navigation.isDone() && (entity.level.isWaterAt(entity.blockPosition().below()) || entity.random.nextInt(interval) == 0);
+            return entity.navigation.isDone() && (entity.level().isWaterAt(entity.blockPosition().below()) || entity.random.nextInt(interval) == 0);
         }
 
         @Override
@@ -225,7 +225,7 @@ public class Bawitius extends WaterAnimal implements NeutralMob, IAnimatable {
         public void start() {
             Vec3 vec3 = this.findPos();
             if (vec3 != null) {
-                entity.navigation.moveTo(entity.navigation.createPath(new BlockPos(vec3), 1), moveSpeed);
+                entity.navigation.moveTo(entity.navigation.createPath(BlockPos.containing(vec3), 1), moveSpeed);
             }
 
         }

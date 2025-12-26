@@ -1,7 +1,7 @@
 package pelagic_prehistory.client.entity;
 
 import pelagic_prehistory.entity.Cladoselache;
-import software.bernie.geckolib3.core.processor.IBone;
+import software.bernie.geckolib.cache.object.GeoBone;
 
 import java.util.Optional;
 
@@ -12,12 +12,12 @@ public class CladoselacheModel<T extends Cladoselache> extends SimplePitchGeoMod
     }
 
     @Override
-    protected Optional<IBone> getHeadBone() {
+    protected Optional<GeoBone> getHeadBone() {
         return Optional.empty();
     }
 
     @Override
-    protected Optional<IBone> getBodyBone() {
-        return Optional.ofNullable(getBone("bone"));
+    protected Optional<GeoBone> getBodyBone() {
+        return getBone("bone");
     }
 }

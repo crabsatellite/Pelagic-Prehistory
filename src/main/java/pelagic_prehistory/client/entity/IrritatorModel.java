@@ -1,7 +1,7 @@
 package pelagic_prehistory.client.entity;
 
 import pelagic_prehistory.entity.Irritator;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib.core.animation.AnimationState;
 
 public class IrritatorModel<T extends Irritator> extends SimplePitchGeoModel<T> {
 
@@ -15,7 +15,7 @@ public class IrritatorModel<T extends Irritator> extends SimplePitchGeoModel<T> 
     }
 
     @Override
-    protected void rotateBody(T animatable, int instanceId, AnimationEvent animationState) {
+    protected void rotateBody(T animatable, long instanceId, AnimationState<T> animationState) {
         // do nothing
     }
 }

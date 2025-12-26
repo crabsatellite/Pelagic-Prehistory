@@ -1,6 +1,7 @@
 package pelagic_prehistory.recipe;
 
 import com.google.gson.JsonObject;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
@@ -52,8 +53,8 @@ public class InfuserRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack assemble(Container pContainer) {
-        return getResultItem();
+    public ItemStack assemble(Container pContainer, RegistryAccess registryAccess) {
+        return getResultItem(registryAccess);
     }
 
     @Override
@@ -62,7 +63,7 @@ public class InfuserRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(RegistryAccess registryAccess) {
         return result.copy();
     }
 

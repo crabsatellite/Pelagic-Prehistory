@@ -34,7 +34,7 @@ public class FloppingGoal extends Goal {
     @Override
     public void tick() {
         final double horizontalDeltaMotion = getHorizontalDeltaMotion();
-        if(!entity.isInWaterOrBubble() && entity.isOnGround() && entity.verticalCollision && this.entity.getRandom().nextInt(getInterval()) == 0) {
+        if(!entity.isInWaterOrBubble() && entity.onGround() && entity.verticalCollision && this.entity.getRandom().nextInt(getInterval()) == 0) {
             entity.setDeltaMovement(entity.getDeltaMovement().add(
                     (entity.getRandom().nextFloat() * 2.0F - 1.0F) * horizontalDeltaMotion,
                     getVerticalDeltaMotion(),

@@ -31,19 +31,19 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import pelagic_prehistory.entity.goal.FloppingGoal;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-public class Prognathodon extends WaterAnimal implements IAnimatable, NeutralMob, Enemy {
+public class Prognathodon extends WaterAnimal implements GeoEntity, NeutralMob, Enemy {
 
     // NEUTRAL MOB //
     private static final UniformInt ANGER_RANGE = TimeUtil.rangeOfSeconds(20, 39);
@@ -51,10 +51,10 @@ public class Prognathodon extends WaterAnimal implements IAnimatable, NeutralMob
     private UUID angerTarget;
 
     // GECKOLIB //
-    protected AnimationFactory instanceCache = GeckoLibUtil.createFactory(this);
-    protected static final AnimationBuilder ANIM_SWIM = new AnimationBuilder().addAnimation("swim");
-    protected static final AnimationBuilder ANIM_SWIM_FAST = new AnimationBuilder().addAnimation("swim_fast");
-    protected static final AnimationBuilder ANIM_DRY_OUT = new AnimationBuilder().addAnimation("dry_out");
+    protected AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    protected static final RawAnimation ANIM_SWIM = RawAnimation.begin().thenLoop("swim");
+    protected static final RawAnimation ANIM_SWIM_FAST = RawAnimation.begin().thenLoop("swim_fast");
+    protected static final RawAnimation ANIM_DRY_OUT = RawAnimation.begin().thenLoop("dry_out");
 
     public Prognathodon(EntityType<? extends WaterAnimal> type, Level level) {
         super(type, level);
@@ -93,8 +93,8 @@ public class Prognathodon extends WaterAnimal implements IAnimatable, NeutralMob
     @Override
     public void aiStep() {
         super.aiStep();
-        if(!level.isClientSide()) {
-            this.updatePersistentAnger((ServerLevel) this.level, true);
+        if(!level().isClientSide()) {
+            this.updatePersistentAnger((ServerLevel) this.level(), true);
         }
     }
 
@@ -195,7 +195,7 @@ public class Prognathodon extends WaterAnimal implements IAnimatable, NeutralMob
     @Override
     public void readAdditionalSaveData(final CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-        this.readPersistentAngerSaveData(this.level, tag);
+        this.readPersistentAngerSaveData(this.level(), tag);
     }
 
     @Override
@@ -206,25 +206,25 @@ public class Prognathodon extends WaterAnimal implements IAnimatable, NeutralMob
 
     //// GECKOLIB ////
 
-    private PlayState handleAnimation(AnimationEvent<Prognathodon> event) {
+    private PlayState handleAnimation(AnimationState<Prognathodon> state) {
         if(!isInWaterOrBubble()) {
-            event.getController().setAnimation(ANIM_DRY_OUT);
-        } else if(event.isMoving()) {
-            event.getController().setAnimation(ANIM_SWIM_FAST);
+            state.getController().setAnimation(ANIM_DRY_OUT);
+        } else if(state.isMoving()) {
+            state.getController().setAnimation(ANIM_SWIM_FAST);
         } else {
-            event.getController().setAnimation(ANIM_SWIM);
+            state.getController().setAnimation(ANIM_SWIM);
         }
-        event.getController().transitionLengthTicks = 6.0D;
+        state.getController().setTransitionLength(6);
         return PlayState.CONTINUE;
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController<>(this, "controller", 2F, this::handleAnimation));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 2, this::handleAnimation));
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return instanceCache;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
     }
 }

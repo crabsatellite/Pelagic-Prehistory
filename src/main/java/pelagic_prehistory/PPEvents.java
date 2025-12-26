@@ -13,7 +13,7 @@ import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.level.entity.LevelEntityGetter;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.event.entity.living.MobSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -40,18 +40,18 @@ public final class PPEvents {
          * @param event the spawn event
          **/
         @SubscribeEvent
-        public static void onLivingCheckSpawn(final LivingSpawnEvent.CheckSpawn event) {
+        public static void onLivingCheckSpawn(final MobSpawnEvent.FinalizeSpawn event) {
             final int horizontalRadius = 16;
             final int verticalRadius = 32;
             if (event.getEntity().getType() == EntityType.DROWNED
                     && event.getLevel() instanceof ServerLevel level
-                    && (event.getSpawnReason() == MobSpawnType.NATURAL
-                    || event.getSpawnReason() == MobSpawnType.REINFORCEMENT
-                    || event.getSpawnReason() == MobSpawnType.PATROL
-                    || event.getSpawnReason() == MobSpawnType.SPAWNER)) {
+                    && (event.getSpawnType() == MobSpawnType.NATURAL
+                    || event.getSpawnType() == MobSpawnType.REINFORCEMENT
+                    || event.getSpawnType() == MobSpawnType.PATROL
+                    || event.getSpawnType() == MobSpawnType.SPAWNER)) {
 
                 // determine spawn area
-                final BlockPos eventPos = new BlockPos(event.getX(), event.getY(), event.getZ());
+                final BlockPos eventPos = BlockPos.containing(event.getX(), event.getY(), event.getZ());
                 final AABB aabb = new AABB(eventPos).inflate(horizontalRadius, verticalRadius, horizontalRadius);
 
                 // search area for a matching entity
@@ -60,6 +60,7 @@ public final class PPEvents {
                     if(event.getResult() != Event.Result.DENY) {
                         event.setResult(Event.Result.DENY);
                     }
+                    return net.minecraft.world.level.entity.EntityTypeTest.forClass(Entity.class).tryCast(e) != null ? net.minecraft.util.AbortableIterationConsumer.Continuation.ABORT : net.minecraft.util.AbortableIterationConsumer.Continuation.CONTINUE;
                 });
             }
         }

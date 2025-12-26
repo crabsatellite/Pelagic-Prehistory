@@ -2,8 +2,8 @@ package pelagic_prehistory.client.entity;
 
 import net.minecraft.world.phys.Vec2;
 import pelagic_prehistory.entity.Plesiosaurus;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.processor.IBone;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.cache.object.GeoBone;
 
 import java.util.Optional;
 
@@ -19,17 +19,17 @@ public class PlesiosaurusModel<T extends Plesiosaurus> extends SimplePitchGeoMod
     }
 
     @Override
-    protected void rotateHead(T animatable, int instanceId, AnimationEvent animationState) {
-        Optional<IBone> oHead = getHeadBone();
-        Optional<IBone> oNeck = Optional.ofNullable(getBone("neck"));
+    protected void rotateHead(T animatable, long instanceId, AnimationState<T> animationState) {
+        Optional<GeoBone> oHead = getHeadBone();
+        Optional<GeoBone> oNeck = getBone("neck");
         if(oHead.isPresent() && oNeck.isPresent()) {
-            final IBone head = oHead.get();
-            final IBone neck = oNeck.get();
+            final GeoBone head = oHead.get();
+            final GeoBone neck = oNeck.get();
             final Vec2 rotations = getHeadRotations(animatable, instanceId, animationState).scale(0.5F);
-            head.setRotationX(head.getRotationX() + rotations.x);
-            head.setRotationY(head.getRotationY() + rotations.y);
-            neck.setRotationX(neck.getRotationX() + rotations.x);
-            neck.setRotationY(neck.getRotationY() + rotations.y);
+            head.setRotX(head.getRotX() + rotations.x);
+            head.setRotY(head.getRotY() + rotations.y);
+            neck.setRotX(neck.getRotX() + rotations.x);
+            neck.setRotY(neck.getRotY() + rotations.y);
         }
     }
 }

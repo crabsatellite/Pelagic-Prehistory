@@ -1,0 +1,28 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven {
+            name = 'MinecraftForge'
+            url = 'https://maven.minecraftforge.net/'
+        }
+        maven {
+            name = 'Fabric'
+            url = 'https://maven.fabricmc.net/'
+        }
+        maven {
+            name = "ParchmentMC"
+            url = 'https://maven.parchmentmc.org'
+        }
+        maven {
+            name = "NeoForge"
+            url = 'https://maven.neoforged.net/'
+        }
+    }
+}
+
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
+}
+
+rootProject.name = 'GeckoLib'
+include 'core', 'Fabric', 'Forge'

@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
-import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
@@ -66,13 +66,14 @@ public class AnalyzerRecipe implements Recipe<Container> {
 
     /**
      * @param pContainer the input container
+     * @param registryAccess the registry access
      * @return the output item
      * @deprecated use {@link #assemble(Container, RandomSource)}
      */
     @Deprecated
     @Override
-    public ItemStack assemble(Container pContainer) {
-        return getResultItem();
+    public ItemStack assemble(Container pContainer, RegistryAccess registryAccess) {
+        return getResultItem(registryAccess);
     }
 
     @Override
@@ -81,7 +82,7 @@ public class AnalyzerRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(RegistryAccess registryAccess) {
         return PPRegistry.ItemReg.UNKNOWN_VIAL.get().getDefaultInstance();
     }
 
@@ -129,14 +130,14 @@ public class AnalyzerRecipe implements Recipe<Container> {
         @Override
         public @Nullable AnalyzerRecipe fromNetwork(ResourceLocation pRecipeId, FriendlyByteBuf pBuffer) {
             final Ingredient input = Ingredient.fromNetwork(pBuffer);
-            final List<WeightedEntry.Wrapper<ItemStack>> results = pBuffer.readWithCodec(WEIGHTED_ENTRY_OR_LIST_CODEC);
+            final List<WeightedEntry.Wrapper<ItemStack>> results = pBuffer.readWithCodec(net.minecraft.nbt.NbtOps.INSTANCE, WEIGHTED_ENTRY_OR_LIST_CODEC);
             return new AnalyzerRecipe(pRecipeId, input, results);
         }
 
         @Override
         public void toNetwork(FriendlyByteBuf pBuffer, AnalyzerRecipe pRecipe) {
             pRecipe.input.toNetwork(pBuffer);
-            pBuffer.writeWithCodec(WEIGHTED_ENTRY_OR_LIST_CODEC, pRecipe.results);
+            pBuffer.writeWithCodec(net.minecraft.nbt.NbtOps.INSTANCE, WEIGHTED_ENTRY_OR_LIST_CODEC, pRecipe.results);
         }
     }
 }

@@ -69,7 +69,7 @@ public class InfuserBlockEntity extends PPBlockEntityBase<InfuserRecipe> {
 
     @Override
     protected void assembleRecipe(Level level, Container input, InfuserRecipe recipe) {
-        final ItemStack output = recipe.assemble(input);
+        final ItemStack output = recipe.assemble(input, level.registryAccess());
         if(output.isEmpty()) {
             return;
         }

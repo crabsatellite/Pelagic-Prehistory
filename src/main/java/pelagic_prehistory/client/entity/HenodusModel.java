@@ -1,7 +1,7 @@
 package pelagic_prehistory.client.entity;
 
 import pelagic_prehistory.entity.Henodus;
-import software.bernie.geckolib3.core.processor.IBone;
+import software.bernie.geckolib.cache.object.GeoBone;
 
 import java.util.Optional;
 
@@ -17,12 +17,12 @@ public class HenodusModel<T extends Henodus> extends SimplePitchGeoModel<T> {
     }
 
     @Override
-    protected Optional<IBone> getHeadBone() {
-        return Optional.ofNullable(this.getBone("Head"));
+    protected Optional<GeoBone> getHeadBone() {
+        return this.getBone("Head");
     }
 
     @Override
-    protected Optional<IBone> getBodyBone() {
-        return Optional.ofNullable(this.getBone("Henodus"));
+    protected Optional<GeoBone> getBodyBone() {
+        return this.getBone("Henodus");
     }
 }

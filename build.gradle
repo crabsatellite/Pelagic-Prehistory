@@ -1,7 +1,7 @@
 plugins {
     id 'eclipse'
     id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '5.1.+'
+    id 'net.minecraftforge.gradle' version '6.0.+'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
 
@@ -29,6 +29,8 @@ minecraft {
 
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${project.projectDir}/build/createSrgToMcp/output.srg"
 
             mods {
                 pelagic_prehistory {
@@ -42,6 +44,8 @@ minecraft {
 
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${project.projectDir}/build/createSrgToMcp/output.srg"
 
             mods {
                 pelagic_prehistory {
@@ -79,7 +83,11 @@ repositories {
     }
 	maven {
 		name 'GeckoLib'
-		url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' 
+		url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+	}
+	maven {
+		name = 'Jared Maven'
+		url = 'https://maven.blamejared.com'
 	}
 }
 
@@ -87,7 +95,7 @@ dependencies {
     minecraft "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
 
     // GeckoLib
-	implementation fg.deobf("software.bernie.geckolib:geckolib-forge-1.19:${project.geckolib_version}")
+	implementation fg.deobf("curse.maven:geckolib-388172:5460309")
 
     // JEI
 	implementation fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")

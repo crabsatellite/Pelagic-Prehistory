@@ -30,21 +30,21 @@ import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class Cuttlefish extends WaterAnimal implements IAnimatable {
+public class Cuttlefish extends WaterAnimal implements GeoEntity {
 
     // GECKOLIB //
-    protected AnimationFactory instanceCache = GeckoLibUtil.createFactory(this);
-    protected static final AnimationBuilder ANIM_IDLE = new AnimationBuilder().addAnimation("idle");
-    protected static final AnimationBuilder ANIM_SWIM = new AnimationBuilder().addAnimation("swim");
+    protected AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    protected static final RawAnimation ANIM_IDLE = RawAnimation.begin().thenLoop("idle");
+    protected static final RawAnimation ANIM_SWIM = RawAnimation.begin().thenLoop("swim");
 
     public Cuttlefish(EntityType<? extends WaterAnimal> type, Level level) {
         super(type, level);
@@ -166,7 +166,7 @@ public class Cuttlefish extends WaterAnimal implements IAnimatable {
     }
 
     private void spawnInk(LivingEntity lastHurtByMob) {
-        if(this.level.isClientSide()) {
+        if(this.level().isClientSide()) {
             return;
         }
         // play ink sound
@@ -180,7 +180,7 @@ public class Cuttlefish extends WaterAnimal implements IAnimatable {
         for(int i = 0, n = 30; i < n; i++) {
             Vec3 pos = position.add((this.getRandom().nextDouble() - 0.5D) * 2.0D * variance, (this.getRandom().nextDouble() - 0.5D) * 2.0D * variance, (this.getRandom().nextDouble() - 0.5D) * 2.0D * variance);
             Vec3 motion = direction;//direction.add((this.getRandom().nextDouble() - 0.5D) * 2.0D * variance, (this.getRandom().nextDouble() - 0.5D) * 2.0D * variance, (this.getRandom().nextDouble() - 0.5D) * 2.0D * variance);
-            ((ServerLevel)this.level).sendParticles(this.getInkParticle(), pos.x(), pos.y(), pos.z(), 0, motion.x(), motion.y(), motion.z(), speed);
+            ((ServerLevel)this.level()).sendParticles(this.getInkParticle(), pos.x(), pos.y(), pos.z(), 0, motion.x(), motion.y(), motion.z(), speed);
         }
         // add blindness effect
         if(this.position().closerThan(lastHurtByMob.getEyePosition(), 2.5D)) {
@@ -207,22 +207,22 @@ public class Cuttlefish extends WaterAnimal implements IAnimatable {
 
     //// GECKOLIB ////
 
-    private PlayState handleAnimation(AnimationEvent<Cuttlefish> event) {
+    private PlayState handleAnimation(AnimationState<Cuttlefish> state) {
         if(getDeltaMovement().lengthSqr() > 2.5000003E-7F) {
-            event.getController().setAnimation(ANIM_SWIM);
+            state.getController().setAnimation(ANIM_SWIM);
         } else {
-            event.getController().setAnimation(ANIM_IDLE);
+            state.getController().setAnimation(ANIM_IDLE);
         }
         return PlayState.CONTINUE;
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController<>(this, "controller", 2F, this::handleAnimation));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 2, this::handleAnimation));
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return instanceCache;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
     }
 }

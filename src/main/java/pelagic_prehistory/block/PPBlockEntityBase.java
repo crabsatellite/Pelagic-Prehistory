@@ -200,7 +200,7 @@ public abstract class PPBlockEntityBase<R extends Recipe<?>> extends BlockEntity
 
     @Override
     public boolean stillValid(Player pPlayer) {
-        if (pPlayer.level.getBlockEntity(this.worldPosition) != this) {
+        if (pPlayer.level().getBlockEntity(this.worldPosition) != this) {
             return false;
         } else {
             return pPlayer.position().closerThan(Vec3.atCenterOf(worldPosition), 8.0D);

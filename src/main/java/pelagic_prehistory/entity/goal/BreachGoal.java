@@ -46,11 +46,11 @@ public class BreachGoal extends JumpGoal {
 
     private boolean waterIsClear(BlockPos pPos, int pDx, int pDz, int pScale) {
         BlockPos blockpos = pPos.offset(pDx * pScale, 0, pDz * pScale);
-        return this.entity.level.getFluidState(blockpos).is(FluidTags.WATER) && !this.entity.level.getBlockState(blockpos).getMaterial().blocksMotion();
+        return this.entity.level().getFluidState(blockpos).is(FluidTags.WATER) && !this.entity.level().getBlockState(blockpos).blocksMotion();
     }
 
     private boolean surfaceIsClear(BlockPos pPos, int pDx, int pDz, int pScale) {
-        return this.entity.level.getBlockState(pPos.offset(pDx * pScale, 1, pDz * pScale)).isAir() && this.entity.level.getBlockState(pPos.offset(pDx * pScale, 2, pDz * pScale)).isAir();
+        return this.entity.level().getBlockState(pPos.offset(pDx * pScale, 1, pDz * pScale)).isAir() && this.entity.level().getBlockState(pPos.offset(pDx * pScale, 2, pDz * pScale)).isAir();
     }
 
     /**
@@ -58,7 +58,7 @@ public class BreachGoal extends JumpGoal {
      */
     public boolean canContinueToUse() {
         double d0 = this.entity.getDeltaMovement().y;
-        return (!(d0 * d0 < (double) 0.03F) || this.entity.getXRot() == 0.0F || !(Math.abs(this.entity.getXRot()) < 10.0F) || !this.entity.isInWater()) && !this.entity.isOnGround();
+        return (!(d0 * d0 < (double) 0.03F) || this.entity.getXRot() == 0.0F || !(Math.abs(this.entity.getXRot()) < 10.0F) || !this.entity.isInWater()) && !this.entity.onGround();
     }
 
     public boolean isInterruptable() {
@@ -87,7 +87,7 @@ public class BreachGoal extends JumpGoal {
     public void tick() {
         boolean flag = this.breached;
         if (!flag) {
-            FluidState fluidstate = this.entity.level.getFluidState(this.entity.blockPosition());
+            FluidState fluidstate = this.entity.level().getFluidState(this.entity.blockPosition());
             this.breached = fluidstate.is(FluidTags.WATER);
         }
 
@@ -97,7 +97,7 @@ public class BreachGoal extends JumpGoal {
 
         Vec3 vec3 = this.entity.getDeltaMovement();
         if (vec3.y * vec3.y < (double) 0.03F && this.entity.getXRot() != 0.0F) {
-            this.entity.setXRot(Mth.rotlerp(this.entity.getXRot(), 0.0F, 0.2F));
+            this.entity.setXRot(Mth.rotLerp(0.2F, this.entity.getXRot(), 0.0F));
         } else if (vec3.length() > (double) 1.0E-5F) {
             double d0 = vec3.horizontalDistance();
             double d1 = Math.atan2(-vec3.y, d0) * (double) (180F / (float) Math.PI);

@@ -51,20 +51,20 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
 import pelagic_prehistory.PPRegistry;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.UUID;
 
-public class Irritator extends PathfinderMob implements IAnimatable, NeutralMob, Enemy {
+public class Irritator extends PathfinderMob implements GeoEntity, NeutralMob, Enemy {
 
     // NEUTRAL MOB //
     private static final UniformInt ANGER_RANGE = TimeUtil.rangeOfSeconds(20, 39);
@@ -72,10 +72,10 @@ public class Irritator extends PathfinderMob implements IAnimatable, NeutralMob,
     private UUID angerTarget;
 
     // GECKOLIB //
-    protected AnimationFactory instanceCache = GeckoLibUtil.createFactory(this);
-    protected static final AnimationBuilder ANIM_IDLE = new AnimationBuilder().addAnimation("idle");
-    protected static final AnimationBuilder ANIM_WALK = new AnimationBuilder().addAnimation("walk");
-    protected static final AnimationBuilder ANIM_SWIM = new AnimationBuilder().addAnimation("swim");
+    protected AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    protected static final RawAnimation ANIM_IDLE = RawAnimation.begin().thenLoop("idle");
+    protected static final RawAnimation ANIM_WALK = RawAnimation.begin().thenLoop("walk");
+    protected static final RawAnimation ANIM_SWIM = RawAnimation.begin().thenLoop("swim");
 
     // OTHER //
     private boolean isBodyInWater;
@@ -145,19 +145,19 @@ public class Irritator extends PathfinderMob implements IAnimatable, NeutralMob,
     @Override
     public void aiStep() {
         super.aiStep();
-        if(!level.isClientSide()) {
-            this.updatePersistentAnger((ServerLevel) this.level, true);
+        if(!level().isClientSide()) {
+            this.updatePersistentAnger((ServerLevel) this.level(), true);
         }
     }
     @Override
     public void tick() {
         super.tick();
         updateFluidOnBody();
-        if(this.tickCount % 4 == 0 && isShallowWater(level, blockPosition())) {
+        if(this.tickCount % 4 == 0 && isShallowWater(level(), blockPosition())) {
             this.isBodyInWater = false;
             refreshDimensions();
         }
-        if(this.getAirSupply() < 60 && isBodyInWater() && level.getBlockState(new BlockPos(position().add(0, getDimensions(getPose()).height, 0))).isAir()) {
+        if(this.getAirSupply() < 60 && isBodyInWater() && level().getBlockState(BlockPos.containing(position().add(0, getDimensions(getPose()).height, 0))).isAir()) {
             setAirSupply(getMaxAirSupply());
         }
     }
@@ -288,9 +288,9 @@ public class Irritator extends PathfinderMob implements IAnimatable, NeutralMob,
 
     private void updateFluidOnBody() {
         double bodyY = this.getY() + getDimensions(getPose()).height * 0.5D;
-        BlockPos blockpos = new BlockPos(this.getX(), bodyY, this.getZ());
-        FluidState fluidstate = this.level.getFluidState(blockpos);
-        double fluidHeight = (float)blockpos.getY() + fluidstate.getHeight(this.level, blockpos);
+        BlockPos blockpos = BlockPos.containing(this.getX(), bodyY, this.getZ());
+        FluidState fluidstate = this.level().getFluidState(blockpos);
+        double fluidHeight = (float)blockpos.getY() + fluidstate.getHeight(this.level(), blockpos);
         final boolean isBodyInWater = !fluidstate.isEmpty() && fluidHeight > bodyY;
         if(isBodyInWater != this.isBodyInWater()) {
             this.isBodyInWater = isBodyInWater;
@@ -330,7 +330,7 @@ public class Irritator extends PathfinderMob implements IAnimatable, NeutralMob,
     @Override
     public void readAdditionalSaveData(final CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-        readPersistentAngerSaveData(this.level, tag);
+        readPersistentAngerSaveData(this.level(), tag);
     }
 
     @Override
@@ -341,28 +341,28 @@ public class Irritator extends PathfinderMob implements IAnimatable, NeutralMob,
 
     //// GECKOLIB ////
 
-    private PlayState handleAnimation(AnimationEvent<Irritator> event) {
+    private PlayState handleAnimation(AnimationState<Irritator> state) {
         final boolean inWater = isBodyInWater();
         final boolean isWalking = getDeltaMovement().horizontalDistanceSqr() > 2.5000003E-7F;
         if(inWater) {
-            event.getController().setAnimation(ANIM_SWIM);
+            state.getController().setAnimation(ANIM_SWIM);
         } else if(isWalking) {
-            event.getController().setAnimation(ANIM_WALK);
+            state.getController().setAnimation(ANIM_WALK);
         } else {
-            event.getController().setAnimation(ANIM_IDLE);
+            state.getController().setAnimation(ANIM_IDLE);
         }
-        event.getController().transitionLengthTicks = 4.0D;
+        state.getController().setTransitionLength(4);
         return PlayState.CONTINUE;
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController<>(this, "controller", 2F, this::handleAnimation));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 2, this::handleAnimation));
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return instanceCache;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
     }
 
     //// MOVE CONTROL ////
@@ -395,7 +395,7 @@ public class Irritator extends PathfinderMob implements IAnimatable, NeutralMob,
 
         @Override
         public boolean canUse() {
-            return this.mob.isOnGround() && !this.mob.level.isWaterAt(this.mob.blockPosition()) && super.canUse();
+            return this.mob.onGround() && !this.mob.level().isWaterAt(this.mob.blockPosition()) && super.canUse();
         }
 
         @Override

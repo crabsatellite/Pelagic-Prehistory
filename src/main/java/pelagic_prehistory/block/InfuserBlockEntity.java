@@ -78,13 +78,17 @@ public class InfuserBlockEntity extends PPBlockEntityBase<InfuserRecipe> {
             return;
         }
         final IItemHandler itemHandler = this.itemHandler.orElse(EmptyHandler.INSTANCE);
-        if(itemHandler.insertItem(2, output.copy(), false).isEmpty()) {
+        // check if item fits (simulate)
+        if(itemHandler.insertItem(2, output.copy(), true).isEmpty()) {
+            // insert item (execute)
+            itemHandler.insertItem(2, output.copy(), false);
             // remove input
             this.removeItem(0, 1);
             this.removeItem(1, 1);
             this.resetProgress();
             this.setChanged();
         }
+        // if output full, do nothing (pause machine)
     }
 
     @Override

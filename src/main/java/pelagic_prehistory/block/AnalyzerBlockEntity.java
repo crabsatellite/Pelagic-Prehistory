@@ -79,16 +79,15 @@ public class AnalyzerBlockEntity extends PPBlockEntityBase<AnalyzerRecipe> {
     protected void assembleRecipe(Level level, Container input, AnalyzerRecipe recipe) {
         final ItemStack output = recipe.assemble(input, level.getRandom());
         if(output.isEmpty()) {
-            // still consume input even if no output (bad luck)
-            this.removeItem(0, 1);
-            this.resetProgress();
-            this.setChanged();
+            // recipe produced nothing (error or empty pool) - pause machine to prevent item loss
             return;
         }
         final IItemHandler itemHandler = this.itemHandler.orElse(EmptyHandler.INSTANCE);
         for(int i = 1, n = itemHandler.getSlots(); i < n; i++) {
-            // insert item
-            if(itemHandler.insertItem(i, output.copy(), false).isEmpty()) {
+            // check if item fits (simulate)
+            if(itemHandler.insertItem(i, output.copy(), true).isEmpty()) {
+                // insert item (execute)
+                itemHandler.insertItem(i, output.copy(), false);
                 // remove input
                 this.removeItem(0, 1);
                 this.resetProgress();
@@ -96,8 +95,7 @@ public class AnalyzerBlockEntity extends PPBlockEntityBase<AnalyzerRecipe> {
                 return;
             }
         }
-        // if we reach here, all output slots are full - don't consume input, just reset progress
-        this.resetProgress();
+        // if we reach here, all output slots are full - pause machine (keep progress at 100%)
     }
 
     @Override

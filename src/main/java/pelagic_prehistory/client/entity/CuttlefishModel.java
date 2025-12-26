@@ -32,6 +32,6 @@ public class CuttlefishModel<T extends Cuttlefish> extends SimplePitchGeoModel<T
     protected void rotateBody(T animatable, long instanceId, AnimationState<T> animationState) {
         super.rotateBody(animatable, instanceId, animationState);
         Optional<GeoBone> bone = getBodyBone();
-        bone.ifPresent(geoBone -> geoBone.setRotY(geoBone.getRotY() + Mth.PI));
+        bone.ifPresent(geoBone -> geoBone.setRotY(Mth.PI));
     }
 }

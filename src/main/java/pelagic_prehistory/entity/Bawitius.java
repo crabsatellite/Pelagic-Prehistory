@@ -54,7 +54,7 @@ public class Bawitius extends WaterAnimal implements NeutralMob, GeoEntity {
     private UUID angerTarget;
 
     // GECKOLIB //
-    protected AnimatableInstanceCache instanceCache = GeckoLibUtil.createInstanceCache(this);
+    protected AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     protected static final RawAnimation ANIM_IDLE = RawAnimation.begin().thenLoop("swim");
 
     public Bawitius(EntityType<? extends WaterAnimal> type, Level level) {
@@ -193,7 +193,7 @@ public class Bawitius extends WaterAnimal implements NeutralMob, GeoEntity {
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return instanceCache;
+        return cache;
     }
     
     //// GOALS ////

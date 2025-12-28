@@ -57,10 +57,10 @@ public final class PPEvents {
                 // search area for a matching entity
                 LevelEntityGetter<Entity> entityGetter = level.getEntities();
                 entityGetter.get(EntityTypeTagTest.forTag(ENTITY_TYPE_PREVENTS_DROWNED), aabb, e -> {
-                    if(event.getResult() != Event.Result.DENY) {
+                    if (event.getResult() != Event.Result.DENY) {
                         event.setResult(Event.Result.DENY);
                     }
-                    return net.minecraft.world.level.entity.EntityTypeTest.forClass(Entity.class).tryCast(e) != null ? net.minecraft.util.AbortableIterationConsumer.Continuation.ABORT : net.minecraft.util.AbortableIterationConsumer.Continuation.CONTINUE;
+                    return net.minecraft.util.AbortableIterationConsumer.Continuation.ABORT;
                 });
             }
         }

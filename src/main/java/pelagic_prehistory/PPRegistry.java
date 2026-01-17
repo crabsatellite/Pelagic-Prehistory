@@ -77,6 +77,9 @@ import pelagic_prehistory.entity.Irritator;
 import pelagic_prehistory.entity.Lepidotes;
 import pelagic_prehistory.entity.Prognathodon;
 import pelagic_prehistory.entity.Shonisaurus;
+import pelagic_prehistory.entity.Orthacanthus;
+import pelagic_prehistory.entity.Eurhinosaurus;
+import pelagic_prehistory.entity.Spinosaurus;
 import pelagic_prehistory.worldgen.GinkgoTreeFeature;
 import pelagic_prehistory.worldgen.GinkgoTreeGrower;
 import pelagic_prehistory.block.InfuserBlock;
@@ -170,6 +173,9 @@ public final class PPRegistry {
         public static final RegistryObject<Item> PLIOSAURUS_VIAL = registerVialAndEggs(EntityReg.PLIOSAURUS, "pliosaurus", "pup", 0x4e402c);
         public static final RegistryObject<Item> PROGNATHODON_VIAL = registerVialAndEggs(EntityReg.PROGNATHODON, "prognathodon", "pup", 0xa1ae75);
         public static final RegistryObject<Item> SHONISAURUS_VIAL = registerVialAndEggs(EntityReg.SHONISAURUS, "shonisaurus", "pup", 0x3a746b);
+        public static final RegistryObject<Item> ORTHACANTHUS_VIAL = registerVialAndEggs(EntityReg.ORTHACANTHUS, "orthacanthus", "eggs", 0x717071);
+        public static final RegistryObject<Item> EURHINOSAURUS_VIAL = registerVialAndEggs(EntityReg.EURHINOSAURUS, "eurhinosaurus", "pup", 0xBC8723);
+        public static final RegistryObject<Item> SPINOSAURUS_VIAL = registerVialAndEggs(EntityReg.SPINOSAURUS, "spinosaurus", "egg", 0x334CBF);
         public static final RegistryObject<Item> UNKNOWN_VIAL = ITEMS.register("unknown_vial", () -> new VialItem(0x4c4c4c, new Item.Properties()));
 
         /**
@@ -385,6 +391,9 @@ public final class PPRegistry {
             event.put(PLIOSAURUS.get(), Pliosaurus.createAttributes().build());
             event.put(PROGNATHODON.get(), Prognathodon.createAttributes().build());
             event.put(SHONISAURUS.get(), Shonisaurus.createAttributes().build());
+            event.put(ORTHACANTHUS.get(), Orthacanthus.createAttributes().build());
+            event.put(EURHINOSAURUS.get(), Eurhinosaurus.createAttributes().build());
+            event.put(SPINOSAURUS.get(), Spinosaurus.createAttributes().build());
         }
 
         public static void onRegisterSpawnPlacement(final SpawnPlacementRegisterEvent event) {
@@ -400,6 +409,9 @@ public final class PPRegistry {
             event.register(PLIOSAURUS.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, WaterAnimal::checkSurfaceWaterAnimalSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
             event.register(PROGNATHODON.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, WaterAnimal::checkSurfaceWaterAnimalSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
             event.register(SHONISAURUS.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, WaterAnimal::checkSurfaceWaterAnimalSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+            event.register(ORTHACANTHUS.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, WaterAnimal::checkSurfaceWaterAnimalSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+            event.register(EURHINOSAURUS.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, WaterAnimal::checkSurfaceWaterAnimalSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+            event.register(SPINOSAURUS.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Spinosaurus::checkSpinosaurusSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
         }
 
         public static final RegistryObject<EntityType<Bawitius>> BAWITIUS = ENTITY_TYPES.register("bawitius", () ->
@@ -461,6 +473,21 @@ public final class PPRegistry {
                 EntityType.Builder.of(Shonisaurus::new, MobCategory.WATER_CREATURE)
                         .sized(5.98F, 4.24F)
                         .build("shonisaurus"));
+
+        public static final RegistryObject<EntityType<Orthacanthus>> ORTHACANTHUS = ENTITY_TYPES.register("orthacanthus", () ->
+                EntityType.Builder.of(Orthacanthus::new, MobCategory.WATER_CREATURE)
+                        .sized(1.46F, 0.625F)
+                        .build("orthacanthus"));
+
+        public static final RegistryObject<EntityType<Eurhinosaurus>> EURHINOSAURUS = ENTITY_TYPES.register("eurhinosaurus", () ->
+                EntityType.Builder.of(Eurhinosaurus::new, MobCategory.WATER_CREATURE)
+                        .sized(1.15F, 1.15F)
+                        .build("eurhinosaurus"));
+
+        public static final RegistryObject<EntityType<Spinosaurus>> SPINOSAURUS = ENTITY_TYPES.register("spinosaurus", () ->
+                EntityType.Builder.of(Spinosaurus::new, MobCategory.CREATURE)
+                        .sized(2.44F, 3.96F)
+                        .build("spinosaurus"));
     }
 
     public static final class FeatureReg {
@@ -545,7 +572,12 @@ public final class PPRegistry {
         public static final RegistryObject<SoundEvent> SHONISAURUS_AMBIENT = registerSound("entity.shonisaurus.ambient");
         public static final RegistryObject<SoundEvent> SHONISAURUS_HURT = registerSound("entity.shonisaurus.hurt");
         public static final RegistryObject<SoundEvent> SHONISAURUS_DEATH = registerSound("entity.shonisaurus.death");
-        
+        public static final RegistryObject<SoundEvent> EURHINOSAURUS_AMBIENT = registerSound("entity.eurhinosaurus.ambient");
+        public static final RegistryObject<SoundEvent> EURHINOSAURUS_HURT = registerSound("entity.eurhinosaurus.hurt");
+        public static final RegistryObject<SoundEvent> EURHINOSAURUS_DEATH = registerSound("entity.eurhinosaurus.death");
+        public static final RegistryObject<SoundEvent> SPINOSAURUS_AMBIENT = registerSound("entity.spinosaurus.ambient");
+        public static final RegistryObject<SoundEvent> SPINOSAURUS_HURT = registerSound("entity.spinosaurus.hurt");
+        public static final RegistryObject<SoundEvent> SPINOSAURUS_DEATH = registerSound("entity.spinosaurus.death");
     }
 
     //// FLAMMABLE BLOCKS ////

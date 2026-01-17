@@ -22,6 +22,9 @@ import pelagic_prehistory.client.entity.PlesiosaurusRenderer;
 import pelagic_prehistory.client.entity.PliosaurusRenderer;
 import pelagic_prehistory.client.entity.PrognathodonRenderer;
 import pelagic_prehistory.client.entity.ShonisaurusRenderer;
+import pelagic_prehistory.client.entity.OrthacanthusRenderer;
+import pelagic_prehistory.client.entity.EurhinosaurusRenderer;
+import pelagic_prehistory.client.entity.SpinosaurusRenderer;
 import pelagic_prehistory.client.menu.AnalyzerScreen;
 import pelagic_prehistory.client.menu.InfuserScreen;
 import pelagic_prehistory.item.VialItem;
@@ -48,6 +51,9 @@ public final class ClientEvents {
             event.registerEntityRenderer(PPRegistry.EntityReg.PLIOSAURUS.get(), PliosaurusRenderer::new);
             event.registerEntityRenderer(PPRegistry.EntityReg.PROGNATHODON.get(), PrognathodonRenderer::new);
             event.registerEntityRenderer(PPRegistry.EntityReg.SHONISAURUS.get(), ShonisaurusRenderer::new);
+            event.registerEntityRenderer(PPRegistry.EntityReg.ORTHACANTHUS.get(), OrthacanthusRenderer::new);
+            event.registerEntityRenderer(PPRegistry.EntityReg.EURHINOSAURUS.get(), EurhinosaurusRenderer::new);
+            event.registerEntityRenderer(PPRegistry.EntityReg.SPINOSAURUS.get(), SpinosaurusRenderer::new);
         }
 
         @SubscribeEvent

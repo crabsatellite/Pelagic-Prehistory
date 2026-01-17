@@ -1,0 +1,133 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"swim": {
+			"loop": true,
+			"animation_length": 1.5,
+			"bones": {
+				"body": {
+					"rotation": {
+						"vector": [0, "Math.cos((query.anim_time - 0.2) * 240) * 8", "Math.sin((query.anim_time - 0.2) * 240) * -1"]
+					}
+				},
+				"head": {
+					"rotation": {
+						"vector": [0, "Math.cos((query.anim_time - 0.5) * 240 ) * -10", 0]
+					}
+				},
+				"backbody": {
+					"rotation": {
+						"vector": [0, "Math.cos((query.anim_time - 0.5) * 240) * 15", 0]
+					}
+				},
+				"tail": {
+					"rotation": {
+						"vector": [0, "Math.cos((query.anim_time - 0.7) * 240) * 9", 0]
+					}
+				},
+				"flippa": {
+					"rotation": {
+						"vector": [0, "Math.cos((query.anim_time - 0.9) * 240) * 10", "Math.cos((query.anim_time - 0.5) * 240) * 3"]
+					}
+				},
+				"left_big_flipper": {
+					"rotation": {
+						"vector": [12.5, 0, "-57.5+Math.sin((query.anim_time - 0.2) * 240) * 10"]
+					},
+					"position": {
+						"vector": [-1, 0, 0]
+					}
+				},
+				"left_small_flipper": {
+					"rotation": {
+						"vector": [12.5, 0, "-57.5+Math.sin((query.anim_time-0.2)*240-45)*10"]
+					},
+					"position": {
+						"vector": [-1, 0, 0]
+					}
+				},
+				"right_big_flipper": {
+					"rotation": {
+						"vector": [12.5, 0, "57.5+Math.sin((query.anim_time - 0.2) * 240) * 10"]
+					},
+					"position": {
+						"vector": [1, 0, 0]
+					}
+				},
+				"right_small_flipper": {
+					"rotation": {
+						"vector": [12.5, 0, "57.5+Math.sin((query.anim_time-0.2)*240-45)*10"]
+					},
+					"position": {
+						"vector": [1, 0, 0]
+					}
+				}
+			}
+		},
+		"dry-out": {
+			"loop": true,
+			"bones": {
+				"body": {
+					"position": {
+						"vector": [0, -5, 0]
+					}
+				},
+				"head": {
+					"rotation": {
+						"vector": [10, 0, 0]
+					},
+					"position": {
+						"vector": [0, 0, 1]
+					}
+				},
+				"backbody": {
+					"rotation": {
+						"vector": [-12.5, 0, 0]
+					}
+				},
+				"tail": {
+					"rotation": {
+						"vector": [12.5, 0, 0]
+					}
+				},
+				"flippa": {
+					"rotation": {
+						"vector": [25, 0, 0]
+					}
+				},
+				"left_big_flipper": {
+					"rotation": {
+						"vector": [0, 0, -80]
+					},
+					"position": {
+						"vector": [-1, 0, 0]
+					}
+				},
+				"left_small_flipper": {
+					"rotation": {
+						"vector": [0, 0, -75]
+					},
+					"position": {
+						"vector": [-1, 0, 0]
+					}
+				},
+				"right_big_flipper": {
+					"rotation": {
+						"vector": [0, 0, 80]
+					},
+					"position": {
+						"vector": [1, 0, 0]
+					}
+				},
+				"right_small_flipper": {
+					"rotation": {
+						"vector": [0, 0, 75]
+					},
+					"position": {
+						"vector": [1, 0, 0]
+					}
+				}
+			}
+		}
+	}
+}

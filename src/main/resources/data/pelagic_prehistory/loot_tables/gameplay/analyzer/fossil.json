@@ -83,12 +83,23 @@
           "type": "minecraft:item",
           "name": "pelagic_prehistory:shonisaurus_vial",
           "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "pelagic_prehistory:eurhinosaurus_vial",
+          "weight": 7
+        },
+        {
+          "type": "minecraft:item",
+          "name": "pelagic_prehistory:orthacanthus_vial",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "pelagic_prehistory:spinosaurus_vial",
+          "weight": 3
         }
       ]
     }
   ]
 }
-
-
-
-

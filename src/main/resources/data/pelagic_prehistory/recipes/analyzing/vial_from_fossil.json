@@ -56,6 +56,18 @@
       {
         "data": "pelagic_prehistory:shonisaurus_vial",
         "weight": 2
+      },
+      {
+        "data": "pelagic_prehistory:eurhinosaurus_vial",
+        "weight": 7
+      },
+      {
+        "data": "pelagic_prehistory:orthacanthus_vial",
+        "weight": 10
+      },
+      {
+        "data": "pelagic_prehistory:spinosaurus_vial",
+        "weight": 3
       }
     ]
   }

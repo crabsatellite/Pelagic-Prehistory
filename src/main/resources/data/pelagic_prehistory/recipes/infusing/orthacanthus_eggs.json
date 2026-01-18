@@ -1,0 +1,9 @@
+{
+  "type": "pelagic_prehistory:infusing",
+  "ingredient": {
+    "item": "pelagic_prehistory:orthacanthus_vial"
+  },
+  "result": {
+    "item": "pelagic_prehistory:orthacanthus_eggs"
+  }
+}

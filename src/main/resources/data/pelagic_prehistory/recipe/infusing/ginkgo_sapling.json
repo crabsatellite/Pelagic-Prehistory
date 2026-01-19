@@ -1,0 +1,13 @@
+{
+  "type": "pelagic_prehistory:infusing",
+  "ingredient": {
+    "item": "pelagic_prehistory:ginkgo_tree_vial"
+  },
+  "base": {
+    "tag": "minecraft:saplings"
+  },
+  "result": {
+    "id": "pelagic_prehistory:ginkgo_sapling",
+    "count": 1
+  }
+}

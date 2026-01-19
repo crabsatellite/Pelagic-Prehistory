@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "pelagic_prehistory:ancient_sediment"
+    }
+  ],
+  "result": {
+    "id": "pelagic_prehistory:ancient_sediment_button",
+    "count": 1
+  }
+}

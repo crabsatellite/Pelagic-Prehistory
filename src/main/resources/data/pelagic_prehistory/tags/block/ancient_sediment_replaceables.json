@@ -1,0 +1,12 @@
+{
+  "values": [
+    "#c:ores",
+    "#minecraft:base_stone_overworld",
+    "#minecraft:dirt",
+    "#minecraft:sand",
+    "minecraft:gravel",
+    "minecraft:sandstone",
+    "minecraft:red_sandstone",
+    "minecraft:calcite"
+  ]
+}

@@ -6,6 +6,9 @@ import com.google.gson.JsonObject;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
@@ -15,8 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.crafting.MultiItemValue;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.crafting.MultiItemValue;
 import org.jetbrains.annotations.Nullable;
 import pelagic_prehistory.PPRegistry;
 import pelagic_prehistory.recipe.InfuserRecipe;
@@ -63,8 +65,8 @@ public class VialItem extends Item {
                 // create a component for the recipe base ingredient (hardcoded support for tags and items only)
                 final Component baseName;
                 if(baseJson.has("item")) {
-                    final ResourceLocation key = new ResourceLocation(baseJson.get("item").getAsString());
-                    final Item item = ForgeRegistries.ITEMS.getValue(key);
+                    final ResourceLocation key = ResourceLocation.fromNamespaceAndPath(baseJson.get("item").getAsString());
+                    final Item item = BuiltInRegistries.ITEM.getValue(key);
                     baseName = item.getDescription().copy().withStyle(ChatFormatting.WHITE);
                 } else if(baseJson.has("tag")) {
                     baseName = Component.translatable("item.pelagic_prehistory.vial.tooltip.tag", baseJson.get("tag").getAsString()).withStyle(ChatFormatting.WHITE);;

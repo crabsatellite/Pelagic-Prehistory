@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 2,
+  "ingredient": {
+    "item": "pelagic_prehistory:ancient_sediment"
+  },
+  "result": {
+    "id": "pelagic_prehistory:ancient_sediment_slab",
+    "count": 1
+  }
+}

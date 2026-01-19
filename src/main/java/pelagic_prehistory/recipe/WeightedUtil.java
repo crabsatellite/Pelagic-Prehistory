@@ -3,8 +3,8 @@ package pelagic_prehistory.recipe;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.random.WeightedEntry;
 
-import javax.annotation.Nullable;
 import java.util.Collection;
+import javax.annotation.Nullable;
 
 /**
  * @author skyjay1

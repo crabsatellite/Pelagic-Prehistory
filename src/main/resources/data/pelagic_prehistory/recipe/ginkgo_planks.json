@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "planks",
+  "ingredients": [
+    {
+      "tag": "pelagic_prehistory:ginkgo_logs"
+    }
+  ],
+  "result": {
+    "count": 4,
+    "id": "pelagic_prehistory:ginkgo_planks"
+  }
+}

@@ -2,28 +2,29 @@ package pelagic_prehistory.client;
 
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.RegisterColorHandlersEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import pelagic_prehistory.PPRegistry;
 import pelagic_prehistory.client.entity.BawitiusRenderer;
 import pelagic_prehistory.client.entity.CladoselacheRenderer;
 import pelagic_prehistory.client.entity.CuttlefishRenderer;
 import pelagic_prehistory.client.entity.DugongRenderer;
 import pelagic_prehistory.client.entity.DunkleosteusRenderer;
+import pelagic_prehistory.client.entity.EurhinosaurusRenderer;
 import pelagic_prehistory.client.entity.HenodusRenderer;
 import pelagic_prehistory.client.entity.IrritatorRenderer;
 import pelagic_prehistory.client.entity.LepidotesRenderer;
+import pelagic_prehistory.client.entity.OrthacanthusRenderer;
 import pelagic_prehistory.client.entity.PlesiosaurusRenderer;
 import pelagic_prehistory.client.entity.PliosaurusRenderer;
 import pelagic_prehistory.client.entity.PrognathodonRenderer;
 import pelagic_prehistory.client.entity.ShonisaurusRenderer;
-import pelagic_prehistory.client.entity.OrthacanthusRenderer;
-import pelagic_prehistory.client.entity.EurhinosaurusRenderer;
 import pelagic_prehistory.client.entity.SpinosaurusRenderer;
 import pelagic_prehistory.client.menu.AnalyzerScreen;
 import pelagic_prehistory.client.menu.InfuserScreen;
@@ -32,8 +33,8 @@ import pelagic_prehistory.item.VialItem;
 public final class ClientEvents {
 
     public static void register() {
-        FMLJavaModLoadingContext.get().getModEventBus().register(ModHandler.class);
-        MinecraftForge.EVENT_BUS.register(ForgeHandler.class);
+        // TODO: Get IEventBus from constructor parameter instead.register(ModHandler.class);
+        NeoForge.EVENT_BUS.register(ForgeHandler.class);
     }
 
     public static final class ModHandler {
@@ -72,8 +73,10 @@ public final class ClientEvents {
         }
 
         private static void onRegisterScreens() {
-            MenuScreens.register(PPRegistry.MenuReg.ANALYZER.get(), AnalyzerScreen::new);
-            MenuScreens.register(PPRegistry.MenuReg.INFUSER.get(), InfuserScreen::new);
+            // TODO: MenuScreens.register is now private - use RegisterMenuScreensEvent
+// /* TODO: MenuScreens.register is private in 1.21 - use RegisterMenuScreensEvent */ MenuScreens.register(PPRegistry.MenuReg.ANALYZER.get(), AnalyzerScreen::new);
+            // TODO: MenuScreens.register is now private - use RegisterMenuScreensEvent
+// /* TODO: MenuScreens.register is private in 1.21 - use RegisterMenuScreensEvent */ MenuScreens.register(PPRegistry.MenuReg.INFUSER.get(), InfuserScreen::new);
         }
     }
 

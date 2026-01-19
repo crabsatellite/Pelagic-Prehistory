@@ -1,0 +1,23 @@
+{
+  "type": "c:add_spawns",
+  "biomes": {
+    "type": "c:and",
+    "values": [
+      "#minecraft:is_ocean",
+      {
+        "type": "c:not",
+        "value": "minecraft:frozen_ocean"
+      },
+      {
+        "type": "c:not",
+        "value": "minecraft:deep_frozen_ocean"
+      }
+    ]
+  },
+  "spawners": {
+    "type": "pelagic_prehistory:dugong",
+    "weight": 5,
+    "minCount": 2,
+    "maxCount": 5
+  }
+}

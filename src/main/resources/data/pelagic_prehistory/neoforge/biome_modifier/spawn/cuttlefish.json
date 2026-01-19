@@ -1,0 +1,10 @@
+{
+  "type": "c:add_spawns",
+  "biomes": "#pelagic_prehistory:has_spawn/cuttlefish",
+  "spawners": {
+    "type": "pelagic_prehistory:cuttlefish",
+    "weight": 5,
+    "minCount": 2,
+    "maxCount": 3
+  }
+}

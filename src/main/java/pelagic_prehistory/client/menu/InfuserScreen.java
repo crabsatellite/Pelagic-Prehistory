@@ -1,17 +1,17 @@
 package pelagic_prehistory.client.menu;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import com.mojang.blaze3d.systems.RenderSystem;
 import pelagic_prehistory.PelagicPrehistory;
 import pelagic_prehistory.menu.InfuserMenu;
 
 public class InfuserScreen extends AbstractContainerScreen<InfuserMenu> {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(PelagicPrehistory.MODID, "textures/gui/infuser.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(PelagicPrehistory.MODID, "textures/gui/infuser.png");
 
     private static final int IMAGE_WIDTH = 176;
     private static final int IMAGE_HEIGHT = 166;

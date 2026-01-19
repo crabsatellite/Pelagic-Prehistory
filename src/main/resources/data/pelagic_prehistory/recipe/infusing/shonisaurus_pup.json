@@ -1,0 +1,10 @@
+{
+  "type": "pelagic_prehistory:infusing",
+  "ingredient": {
+    "item": "pelagic_prehistory:shonisaurus_vial"
+  },
+  "result": {
+    "id": "pelagic_prehistory:shonisaurus_pup",
+    "count": 1
+  }
+}

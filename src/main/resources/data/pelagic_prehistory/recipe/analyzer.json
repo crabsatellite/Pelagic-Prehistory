@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "#G#",
+    "#S#"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:iron_ingot"
+    },
+    "G": {
+      "item": "minecraft:glass"
+    },
+    "S": {
+      "item": "minecraft:spyglass"
+    },
+    "#": {
+      "item": "pelagic_prehistory:ancient_sediment"
+    }
+  },
+  "result": {
+    "id": "pelagic_prehistory:analyzer",
+    "count": 1
+  }
+}

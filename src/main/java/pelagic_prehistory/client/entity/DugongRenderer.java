@@ -1,7 +1,7 @@
 package pelagic_prehistory.client.entity;
 
-import pelagic_prehistory.entity.Dugong;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import pelagic_prehistory.entity.Dugong;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class DugongRenderer<T extends Dugong> extends GeoEntityRenderer<T> {

@@ -12,7 +12,7 @@ public class GinkgoTreeGrower extends AbstractTreeGrower {
 
     private static final ResourceKey<ConfiguredFeature<?, ?>> FEATURE_KEY = ResourceKey.create(
             Registries.CONFIGURED_FEATURE,
-            new ResourceLocation(PelagicPrehistory.MODID, "ginkgo_tree")
+            ResourceLocation.fromNamespaceAndPath(PelagicPrehistory.MODID, "ginkgo_tree")
     );
 
     @Override

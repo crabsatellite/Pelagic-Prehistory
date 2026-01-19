@@ -1,0 +1,10 @@
+{
+  "type": "pelagic_prehistory:infusing",
+  "ingredient": {
+    "item": "pelagic_prehistory:plesiosaurus_vial"
+  },
+  "result": {
+    "id": "pelagic_prehistory:plesiosaurus_pup",
+    "count": 1
+  }
+}

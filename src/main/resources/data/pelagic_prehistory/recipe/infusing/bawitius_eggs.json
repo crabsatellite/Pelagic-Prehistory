@@ -1,0 +1,10 @@
+{
+  "type": "pelagic_prehistory:infusing",
+  "ingredient": {
+    "item": "pelagic_prehistory:bawitius_vial"
+  },
+  "result": {
+    "id": "pelagic_prehistory:bawitius_eggs",
+    "count": 1
+  }
+}

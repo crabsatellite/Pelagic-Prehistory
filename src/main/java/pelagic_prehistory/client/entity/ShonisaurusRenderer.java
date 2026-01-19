@@ -1,7 +1,7 @@
 package pelagic_prehistory.client.entity;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import com.mojang.blaze3d.vertex.PoseStack;
 import pelagic_prehistory.entity.Shonisaurus;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 

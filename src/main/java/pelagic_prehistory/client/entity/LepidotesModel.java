@@ -2,8 +2,8 @@ package pelagic_prehistory.client.entity;
 
 import net.minecraft.util.Mth;
 import pelagic_prehistory.entity.Lepidotes;
-import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.cache.object.GeoBone;
+import software.bernie.geckolib.core.animation.AnimationState;
 
 import java.util.Optional;
 

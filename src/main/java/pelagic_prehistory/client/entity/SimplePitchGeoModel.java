@@ -1,14 +1,14 @@
 package pelagic_prehistory.client.entity;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec2;
 import pelagic_prehistory.PelagicPrehistory;
-import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.cache.object.GeoBone;
+import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
@@ -23,9 +23,9 @@ public class SimplePitchGeoModel<T extends LivingEntity & GeoEntity> extends Geo
 
     public SimplePitchGeoModel(final String name) {
         super();
-        this.textureLocation = new ResourceLocation(PelagicPrehistory.MODID, "textures/entity/" + name + ".png");
-        this.modelLocation = new ResourceLocation(PelagicPrehistory.MODID, "geo/entity/" + name + ".geo.json");
-        this.animationLocation = new ResourceLocation(PelagicPrehistory.MODID, "animations/entity/" + name + ".animation.json");
+        this.textureLocation = ResourceLocation.fromNamespaceAndPath(PelagicPrehistory.MODID, "textures/entity/" + name + ".png");
+        this.modelLocation = ResourceLocation.fromNamespaceAndPath(PelagicPrehistory.MODID, "geo/entity/" + name + ".geo.json");
+        this.animationLocation = ResourceLocation.fromNamespaceAndPath(PelagicPrehistory.MODID, "animations/entity/" + name + ".animation.json");
     }
 
     @Override

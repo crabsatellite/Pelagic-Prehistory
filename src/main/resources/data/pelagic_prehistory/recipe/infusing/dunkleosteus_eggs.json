@@ -1,0 +1,10 @@
+{
+  "type": "pelagic_prehistory:infusing",
+  "ingredient": {
+    "item": "pelagic_prehistory:dunkleosteus_vial"
+  },
+  "result": {
+    "id": "pelagic_prehistory:dunkleosteus_eggs",
+    "count": 1
+  }
+}

@@ -37,9 +37,9 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.ForgeMod;
+import net.neoforged.neoforge.common.NeoForgeMod;
 import pelagic_prehistory.PPRegistry;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -50,8 +50,8 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import javax.annotation.Nullable;
 import java.util.UUID;
+import javax.annotation.Nullable;
 
 public class Spinosaurus extends PathfinderMob implements NeutralMob, GeoEntity {
 
@@ -73,8 +73,8 @@ public class Spinosaurus extends PathfinderMob implements NeutralMob, GeoEntity 
         super(type, level);
         this.moveControl = new SmoothSwimmingMoveControl(this, 30, 20, 0.2F, 0.8F, true);
         this.lookControl = new SmoothSwimmingLookControl(this, 15);
-        this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
-        this.setPathfindingMalus(BlockPathTypes.WATER_BORDER, 0.0F);
+        this.setPathfindingMalus(PathType.WATER, 0.0F);
+        this.setPathfindingMalus(PathType.WATER_BORDER, 0.0F);
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -82,7 +82,7 @@ public class Spinosaurus extends PathfinderMob implements NeutralMob, GeoEntity 
                 .add(Attributes.MAX_HEALTH, 30.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.15D)
                 .add(Attributes.ATTACK_DAMAGE, 8.0D)
-                .add(ForgeMod.STEP_HEIGHT_ADDITION.get(), 0.8D);
+                .add(NeoForgeMod.STEP_HEIGHT_ADDITION.get(), 0.8D);
     }
 
     public static boolean checkSpinosaurusSpawnRules(EntityType<? extends PathfinderMob> entity, LevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
@@ -170,8 +170,8 @@ public class Spinosaurus extends PathfinderMob implements NeutralMob, GeoEntity 
     public float getWalkTargetValue(BlockPos pPos, LevelReader pLevel) {
         BlockPos posBelow = pPos.below();
         BlockState blockState = pLevel.getBlockState(posBelow);
-        BlockPathTypes pathType = blockState.getBlockPathType(pLevel, posBelow, this);
-        if (pathType == BlockPathTypes.WATER_BORDER || pathType == BlockPathTypes.WATER
+        PathType pathType = blockState.getBlockPathType(pLevel, posBelow, this);
+        if (pathType == PathType.WATER_BORDER || pathType == PathType.WATER
                 || blockState.is(Blocks.GRASS_BLOCK) || isShallowWater(pLevel, pPos)) {
             return 8.0F;
         }

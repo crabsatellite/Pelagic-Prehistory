@@ -12,7 +12,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.crafting.CraftingHelper;
+import net.neoforged.neoforge.common.crafting.CraftingHelper;
 import org.jetbrains.annotations.Nullable;
 import pelagic_prehistory.PPRegistry;
 
@@ -99,8 +99,8 @@ public class InfuserRecipe implements Recipe<Container> {
         @Override
         public InfuserRecipe fromJson(ResourceLocation pRecipeId, JsonObject pSerializedRecipe) {
             // parse input item
-            final Ingredient ingredient = Ingredient.fromJson(pSerializedRecipe.get(INGREDIENT));
-            final Ingredient base = pSerializedRecipe.has(BASE) ? Ingredient.fromJson(pSerializedRecipe.get(BASE)) : Ingredient.of(Items.EGG);
+            final Ingredient ingredient = /* TODO: Use Ingredient.CODEC.parse(JsonOps.INSTANCE, json).result().orElse(Ingredient.EMPTY) instead */ Ingredient.fromJson(pSerializedRecipe.get(INGREDIENT));
+            final Ingredient base = pSerializedRecipe.has(BASE) ? /* TODO: Use Ingredient.CODEC.parse(JsonOps.INSTANCE, json).result().orElse(Ingredient.EMPTY) instead */ Ingredient.fromJson(pSerializedRecipe.get(BASE)) : Ingredient.of(Items.EGG);
             final ItemStack result = CraftingHelper.getItemStack(pSerializedRecipe.getAsJsonObject(RESULT), true, true);
             // create recipe
             return new InfuserRecipe(pRecipeId, ingredient, base, result);

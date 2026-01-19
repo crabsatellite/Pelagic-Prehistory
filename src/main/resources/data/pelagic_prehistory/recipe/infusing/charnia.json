@@ -1,0 +1,13 @@
+{
+  "type": "pelagic_prehistory:infusing",
+  "ingredient": {
+    "item": "pelagic_prehistory:charnia_vial"
+  },
+  "base": {
+    "tag": "c:slimeballs"
+  },
+  "result": {
+    "id": "pelagic_prehistory:charnia",
+    "count": 1
+  }
+}

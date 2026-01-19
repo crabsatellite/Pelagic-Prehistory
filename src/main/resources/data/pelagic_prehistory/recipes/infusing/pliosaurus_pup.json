@@ -1,9 +1,0 @@
-{
-  "type": "pelagic_prehistory:infusing",
-  "ingredient": {
-    "item": "pelagic_prehistory:pliosaurus_vial"
-  },
-  "result": {
-    "item": "pelagic_prehistory:pliosaurus_pup"
-  }
-}

@@ -2,6 +2,8 @@ package pelagic_prehistory;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -12,27 +14,27 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.level.entity.LevelEntityGetter;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.MobSpawnEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.living.MobSpawnEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 import javax.annotation.Nullable;
 
 public final class PPEvents {
 
     public static void register() {
-        FMLJavaModLoadingContext.get().getModEventBus().register(ModHandler.class);
-        MinecraftForge.EVENT_BUS.register(ForgeHandler.class);
+        // TODO: Get IEventBus from constructor parameter instead.register(ModHandler.class);
+        NeoForge.EVENT_BUS.register(ForgeHandler.class);
     }
 
     public static final class ForgeHandler {
 
-        private static final TagKey<EntityType<?>> ENTITY_TYPE_PREVENTS_DROWNED = ForgeRegistries.ENTITY_TYPES.tags()
-                .createTagKey(new ResourceLocation(PelagicPrehistory.MODID, "prevents_drowned"));
+        private static final TagKey<EntityType<?>> ENTITY_TYPE_PREVENTS_DROWNED = BuiltInRegistries.ENTITY_TYPE.tags()
+                .createTagKey(ResourceLocation.fromNamespaceAndPath(PelagicPrehistory.MODID, "prevents_drowned"));
 
         /**
          * Used to add prevent drowned from spawning near certain entities
@@ -40,7 +42,7 @@ public final class PPEvents {
          * @param event the spawn event
          **/
         @SubscribeEvent
-        public static void onLivingCheckSpawn(final MobSpawnEvent.FinalizeSpawn event) {
+        public static void onLivingCheckSpawn(final FinalizeSpawnEvent event) {
             final int horizontalRadius = 16;
             final int verticalRadius = 32;
             if (event.getEntity().getType() == EntityType.DROWNED

@@ -1,9 +1,0 @@
-{
-  "type": "pelagic_prehistory:infusing",
-  "ingredient": {
-    "item": "pelagic_prehistory:eurhinosaurus_vial"
-  },
-  "result": {
-    "item": "pelagic_prehistory:eurhinosaurus_pup"
-  }
-}

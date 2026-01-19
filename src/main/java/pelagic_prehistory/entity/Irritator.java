@@ -46,10 +46,10 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeMod;
+import net.neoforged.neoforge.common.NeoForgeMod;
 import pelagic_prehistory.PPRegistry;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -60,9 +60,9 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.UUID;
+import javax.annotation.Nullable;
 
 public class Irritator extends PathfinderMob implements GeoEntity, NeutralMob, Enemy {
 
@@ -83,8 +83,8 @@ public class Irritator extends PathfinderMob implements GeoEntity, NeutralMob, E
 
     public Irritator(EntityType<? extends PathfinderMob> type, Level level) {
         super(type, level);
-        this.setPathfindingMalus(BlockPathTypes.WATER_BORDER, 0.0F);
-        this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
+        this.setPathfindingMalus(PathType.WATER_BORDER, 0.0F);
+        this.setPathfindingMalus(PathType.WATER, 0.0F);
         this.moveControl = new Irritator.IrritatorMoveControl(this);
         this.lookControl = new SmoothSwimmingLookControl(this, 20);
         this.swimmingSize = EntityDimensions.scalable(type.getDimensions().width, type.getDimensions().height * 0.62F);
@@ -95,7 +95,7 @@ public class Irritator extends PathfinderMob implements GeoEntity, NeutralMob, E
                 .add(Attributes.MAX_HEALTH, 20.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.32D)
                 .add(Attributes.ATTACK_DAMAGE, 5.0D)
-                .add(ForgeMod.STEP_HEIGHT_ADDITION.get(), 0.8D);
+                .add(NeoForgeMod.STEP_HEIGHT_ADDITION.get(), 0.8D);
     }
 
     public static boolean checkIrritatorSpawnRules(EntityType<? extends PathfinderMob> entity, LevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
@@ -176,8 +176,8 @@ public class Irritator extends PathfinderMob implements GeoEntity, NeutralMob, E
     public float getWalkTargetValue(BlockPos pPos, LevelReader pLevel) {
         final BlockPos posBelow = pPos.below();
         final BlockState blockState = pLevel.getBlockState(posBelow);
-        final BlockPathTypes pathType = blockState.getBlockPathType(pLevel, posBelow, this);
-        if(pathType == BlockPathTypes.WATER_BORDER || pathType == BlockPathTypes.WATER
+        final PathType pathType = blockState.getBlockPathType(pLevel, posBelow, this);
+        if(pathType == PathType.WATER_BORDER || pathType == PathType.WATER
                 || blockState.is(Blocks.GRASS_BLOCK) || isShallowWater(pLevel, pPos)) {
             return 8.0F;
         }

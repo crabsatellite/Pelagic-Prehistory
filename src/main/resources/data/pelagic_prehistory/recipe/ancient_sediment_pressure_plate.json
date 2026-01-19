@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "#": {
+      "item": "pelagic_prehistory:ancient_sediment"
+    }
+  },
+  "pattern": [
+    "##"
+  ],
+  "result": {
+    "id": "pelagic_prehistory:ancient_sediment_pressure_plate",
+    "count": 1
+  }
+}

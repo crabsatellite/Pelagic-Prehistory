@@ -2,10 +2,10 @@ package pelagic_prehistory.recipe;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonObject;
-import com.mojang.datafixers.util.Either;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.JsonOps;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
@@ -17,7 +17,9 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistries;
+import com.mojang.datafixers.util.Either;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.JsonOps;
 import org.jetbrains.annotations.Nullable;
 import pelagic_prehistory.PPRegistry;
 import pelagic_prehistory.PelagicPrehistory;
@@ -30,7 +32,7 @@ public class AnalyzerRecipe implements Recipe<Container> {
 
     private static final WeightedEntry.Wrapper<ItemStack> EMPTY_WRAPPER = WeightedEntry.wrap(ItemStack.EMPTY, 1);
 
-    private static final Codec<ItemStack> ITEM_OR_STACK_CODEC = Codec.either(ForgeRegistries.ITEMS.getCodec(), ItemStack.CODEC)
+    private static final Codec<ItemStack> ITEM_OR_STACK_CODEC = Codec.either(BuiltInRegistries.ITEM.getCodec(), ItemStack.CODEC)
             .xmap(either -> either.map(ItemStack::new, Function.identity()),
                     stack -> stack.getCount() == 1 && !stack.hasTag() ? Either.left(stack.getItem()) : Either.right(stack));
 
@@ -118,7 +120,7 @@ public class AnalyzerRecipe implements Recipe<Container> {
         @Override
         public AnalyzerRecipe fromJson(ResourceLocation pRecipeId, JsonObject pSerializedRecipe) {
             // parse input item
-            final Ingredient input = Ingredient.fromJson(pSerializedRecipe.get(INPUT));
+            final Ingredient input = /* TODO: Use Ingredient.CODEC.parse(JsonOps.INSTANCE, json).result().orElse(Ingredient.EMPTY) instead */ Ingredient.fromJson(pSerializedRecipe.get(INPUT));
             // parse result items
             final List<WeightedEntry.Wrapper<ItemStack>> results = WEIGHTED_ENTRY_OR_LIST_CODEC.parse(JsonOps.INSTANCE, pSerializedRecipe.get(OUTPUT))
                     .resultOrPartial(s -> PelagicPrehistory.LOGGER.error("[AnalyzerRecipe] Failed to parse recipe results \"" + pRecipeId + "\":\n" + s))

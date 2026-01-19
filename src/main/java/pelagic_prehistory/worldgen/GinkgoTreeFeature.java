@@ -1,9 +1,11 @@
 package pelagic_prehistory.worldgen;
 
 
-import com.mojang.serialization.Codec;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
@@ -20,19 +22,19 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import net.minecraft.world.level.levelgen.structure.templatesystem.TagMatchTest;
-import net.minecraftforge.registries.ForgeRegistries;
+import com.mojang.serialization.Codec;
 import pelagic_prehistory.PelagicPrehistory;
 
 public class GinkgoTreeFeature extends Feature<TreeConfiguration> {
 
-    private static final TagKey<Block> GINKGO_TREE_REPLACEABLE = ForgeRegistries.BLOCKS.tags().createTagKey(new ResourceLocation(PelagicPrehistory.MODID, "ginkgo_tree_replaceable"));
+    private static final TagKey<Block> GINKGO_TREE_REPLACEABLE = BuiltInRegistries.BLOCK.tags().createTagKey(ResourceLocation.fromNamespaceAndPath(PelagicPrehistory.MODID, "ginkgo_tree_replaceable"));
     private static final LocStructureProcessor HAS_REPLACEABLE = new LocStructureProcessor(new TagMatchTest(GINKGO_TREE_REPLACEABLE));
 
 
     private static final ResourceLocation[] TREES = {
-            new ResourceLocation(PelagicPrehistory.MODID, "ginkgo_tree/tree_0"),
-            new ResourceLocation(PelagicPrehistory.MODID, "ginkgo_tree/tree_1"),
-            new ResourceLocation(PelagicPrehistory.MODID, "ginkgo_tree/tree_2"),
+            ResourceLocation.fromNamespaceAndPath(PelagicPrehistory.MODID, "ginkgo_tree/tree_0"),
+            ResourceLocation.fromNamespaceAndPath(PelagicPrehistory.MODID, "ginkgo_tree/tree_1"),
+            ResourceLocation.fromNamespaceAndPath(PelagicPrehistory.MODID, "ginkgo_tree/tree_2"),
     };
 
     public GinkgoTreeFeature(final Codec<TreeConfiguration> codec) {

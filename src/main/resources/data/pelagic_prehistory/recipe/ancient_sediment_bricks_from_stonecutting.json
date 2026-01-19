@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 1,
+  "ingredient": {
+    "item": "pelagic_prehistory:ancient_sediment"
+  },
+  "result": {
+    "id": "pelagic_prehistory:ancient_sediment_bricks",
+    "count": 1
+  }
+}

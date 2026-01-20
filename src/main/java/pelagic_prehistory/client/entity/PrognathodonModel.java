@@ -3,7 +3,7 @@ package pelagic_prehistory.client.entity;
 import net.minecraft.world.phys.Vec2;
 import pelagic_prehistory.entity.Prognathodon;
 import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.animation.AnimationState;
 
 import java.util.Optional;
 

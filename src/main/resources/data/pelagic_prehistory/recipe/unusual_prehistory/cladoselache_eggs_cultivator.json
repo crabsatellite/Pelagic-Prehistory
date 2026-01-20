@@ -1,24 +1,17 @@
 {
-  "type": "forge:conditional",
-  "recipes": [
+  "neoforge:conditions": [
     {
-      "conditions": [
-        {
-          "type": "forge:mod_loaded",
-          "modid": "unusualprehistory"
-        }
-      ],
-      "recipe": {
-        "type": "unusualprehistory:cultivator",
-        "ingredients": [
-          {
-            "item": "pelagic_prehistory:cladoselache_vial"
-          }
-        ],
-        "output": {
-          "item": "pelagic_prehistory:cladoselache_eggs"
-        }
-      }
+      "type": "neoforge:mod_loaded",
+      "modid": "unusualprehistory"
     }
-  ]
+  ],
+  "type": "unusualprehistory:cultivator",
+  "ingredients": [
+    {
+      "item": "pelagic_prehistory:cladoselache_vial"
+    }
+  ],
+  "output": {
+    "item": "pelagic_prehistory:cladoselache_eggs"
+  }
 }

@@ -7,7 +7,7 @@ plugins {
 }
 
 version = project.mod_version
-group = 'com.github."pelagic_prehistory"'
+group = 'com.github.pelagic_prehistory'
 
 repositories {
     mavenLocal()
@@ -22,10 +22,14 @@ repositories {
         name = "ModMaven"
         url = "https://modmaven.dev"
     }
+    maven {
+        name = "GeckoLib"
+        url = "https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/"
+    }
 }
 
 base {
-    archivesName = '"pelagic_prehistory"'
+    archivesName = 'pelagic_prehistory'
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
@@ -70,6 +74,9 @@ dependencies {
     compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
     compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
     runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
+    
+    // GeckoLib for animations
+    implementation "curse.maven:geckolib-388172:6304958"
 }
 
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
@@ -84,6 +91,7 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             mod_license            : mod_license,
             mod_version            : mod_version,
             mod_authors            : mod_authors,
+            mod_credits            : mod_credits,
             mod_description        : mod_description
     ]
     inputs.properties replaceProperties

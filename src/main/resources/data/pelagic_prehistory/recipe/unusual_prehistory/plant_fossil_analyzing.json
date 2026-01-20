@@ -1,91 +1,84 @@
 {
-  "type": "forge:conditional",
-  "recipes": [
+  "neoforge:conditions": [
     {
-      "conditions": [
-        {
-          "type": "forge:mod_loaded",
-          "modid": "unusualprehistory"
-        }
-      ],
-      "recipe": {
-        "type": "pelagic_prehistory:analyzing",
-        "input": {
-          "item": "unusualprehistory:plant_fossil_item"
-        },
-        "output": {
-          "pool": [
-            {
-              "weight": 50,
-              "data": "minecraft:coal"
-            },
-            {
-              "weight": 50,
-              "data": "minecraft:cobblestone"
-            },
-            {
-              "weight": 50,
-              "data": "minecraft:moss_block"
-            },
-            {
-              "weight": 50,
-              "data": "minecraft:moss_carpet"
-            },
-            {
-              "weight": 50,
-              "data": "minecraft:fern"
-            },
-            {
-              "weight": 50,
-              "data": "minecraft:large_fern"
-            },
-            {
-              "weight": 40,
-              "data": "unusualprehistory:horsetail_flask"
-            },
-            {
-              "weight": 40,
-              "data": "unusualprehistory:nelumbites_flask"
-            },
-            {
-              "weight": 40,
-              "data": "unusualprehistory:anostylostroma_flask"
-            },
-            {
-              "weight": 30,
-              "data": "unusualprehistory:leefructus_flask"
-            },
-            {
-              "weight": 25,
-              "data": "unusualprehistory:bennet_flask"
-            },
-            {
-              "weight": 25,
-              "data": "unusualprehistory:sarr_flask"
-            },
-            {
-              "weight": 25,
-              "data": "unusualprehistory:archao_flask"
-            },
-            {
-              "weight": 25,
-              "data": "unusualprehistory:quereuxia_flask"
-            },
-            {
-              "weight": 15,
-              "data": "unusualprehistory:ginkgo_flask"
-            },
-            {
-              "weight": 15,
-              "data": "unusualprehistory:clathrodictyon_flask"
-            },
-            {
-              "weight": 15,
-              "data": "unusualprehistory:archaefructus_flask"
-            }
-          ]
-        }
-      }
+      "type": "neoforge:mod_loaded",
+      "modid": "unusualprehistory"
     }
-  ]
+  ],
+  "type": "pelagic_prehistory:analyzing",
+  "input": {
+    "item": "unusualprehistory:plant_fossil_item"
+  },
+  "output": {
+    "pool": [
+      {
+        "weight": 50,
+        "data": "minecraft:coal"
+      },
+      {
+        "weight": 50,
+        "data": "minecraft:cobblestone"
+      },
+      {
+        "weight": 50,
+        "data": "minecraft:moss_block"
+      },
+      {
+        "weight": 50,
+        "data": "minecraft:moss_carpet"
+      },
+      {
+        "weight": 50,
+        "data": "minecraft:fern"
+      },
+      {
+        "weight": 50,
+        "data": "minecraft:large_fern"
+      },
+      {
+        "weight": 40,
+        "data": "unusualprehistory:horsetail_flask"
+      },
+      {
+        "weight": 40,
+        "data": "unusualprehistory:nelumbites_flask"
+      },
+      {
+        "weight": 40,
+        "data": "unusualprehistory:anostylostroma_flask"
+      },
+      {
+        "weight": 30,
+        "data": "unusualprehistory:leefructus_flask"
+      },
+      {
+        "weight": 25,
+        "data": "unusualprehistory:bennet_flask"
+      },
+      {
+        "weight": 25,
+        "data": "unusualprehistory:sarr_flask"
+      },
+      {
+        "weight": 25,
+        "data": "unusualprehistory:archao_flask"
+      },
+      {
+        "weight": 25,
+        "data": "unusualprehistory:quereuxia_flask"
+      },
+      {
+        "weight": 15,
+        "data": "unusualprehistory:ginkgo_flask"
+      },
+      {
+        "weight": 15,
+        "data": "unusualprehistory:clathrodictyon_flask"
+      },
+      {
+        "weight": 15,
+        "data": "unusualprehistory:archaefructus_flask"
+      }
+    ]
+  }
 }

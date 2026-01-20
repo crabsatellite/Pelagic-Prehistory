@@ -1,25 +1,18 @@
 {
-  "type": "forge:conditional",
-  "recipes": [
+  "neoforge:conditions": [
     {
-      "conditions": [
-        {
-          "type": "forge:mod_loaded",
-          "modid": "unusualprehistory"
-        }
-      ],
-      "recipe": {
-        "type": "pelagic_prehistory:infusing",
-        "ingredient": {
-          "item": "unusualprehistory:archaefructus_flask"
-        },
-        "base": {
-          "item": "unusualprehistory:organic_ooze"
-        },
-        "result": {
-          "item": "unusualprehistory:archaefructus"
-        }
-      }
+      "type": "neoforge:mod_loaded",
+      "modid": "unusualprehistory"
     }
-  ]
+  ],
+  "type": "pelagic_prehistory:infusing",
+  "ingredient": {
+    "item": "unusualprehistory:archaefructus_flask"
+  },
+  "base": {
+    "item": "unusualprehistory:organic_ooze"
+  },
+  "result": {
+    "item": "unusualprehistory:archaefructus"
+  }
 }

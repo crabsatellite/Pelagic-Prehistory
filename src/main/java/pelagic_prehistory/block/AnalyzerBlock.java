@@ -18,16 +18,25 @@ import net.minecraft.world.level.block.entity.BarrelBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.BlockHitResult;
+import com.mojang.serialization.MapCodec;
 import org.jetbrains.annotations.Nullable;
 import pelagic_prehistory.PPRegistry;
 
 public class AnalyzerBlock extends HorizontalDirectionalBlock implements EntityBlock {
 
+    public static final MapCodec<AnalyzerBlock> CODEC = simpleCodec(AnalyzerBlock::new);
+
     public AnalyzerBlock(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
+        return CODEC;
     }
 
     @Override
@@ -54,9 +63,9 @@ public class AnalyzerBlock extends HorizontalDirectionalBlock implements EntityB
     }
 
     @Override
-    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+    protected InteractionResult useWithoutItem(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, BlockHitResult pHit) {
         if (!pLevel.isClientSide() && pLevel.getBlockEntity(pPos) instanceof AnalyzerBlockEntity blockEntity) {
-            NetworkHooks.openScreen((ServerPlayer) pPlayer, blockEntity, data -> data.writeBlockPos(pPos));
+            pPlayer.openMenu(blockEntity, data -> data.writeBlockPos(pPos));
             return InteractionResult.CONSUME;
         }
         return InteractionResult.SUCCESS;

@@ -6,67 +6,67 @@
   "output": {
     "pool": [
       {
-        "data": "pelagic_prehistory:ginkgo_tree_vial",
+        "data": { "id": "pelagic_prehistory:ginkgo_tree_vial" },
         "weight": 20
       },
       {
-        "data": "pelagic_prehistory:charnia_vial",
+        "data": { "id": "pelagic_prehistory:charnia_vial" },
         "weight": 20
       },
       {
-        "data": "pelagic_prehistory:green_sea_sponge_vial",
+        "data": { "id": "pelagic_prehistory:green_sea_sponge_vial" },
         "weight": 20
       },
       {
-        "data": "pelagic_prehistory:bawitius_vial",
+        "data": { "id": "pelagic_prehistory:bawitius_vial" },
         "weight": 20
       },
       {
-        "data": "pelagic_prehistory:cladoselache_vial",
+        "data": { "id": "pelagic_prehistory:cladoselache_vial" },
         "weight": 15
       },
       {
-        "data": "pelagic_prehistory:dunkleosteus_vial",
+        "data": { "id": "pelagic_prehistory:dunkleosteus_vial" },
         "weight": 7
       },
       {
-        "data": "pelagic_prehistory:henodus_vial",
+        "data": { "id": "pelagic_prehistory:henodus_vial" },
         "weight": 8
       },
       {
-        "data": "pelagic_prehistory:lepidotes_vial",
+        "data": { "id": "pelagic_prehistory:lepidotes_vial" },
         "weight": 20
       },
       {
-        "data": "pelagic_prehistory:irritator_vial",
+        "data": { "id": "pelagic_prehistory:irritator_vial" },
         "weight": 5
       },
       {
-        "data": "pelagic_prehistory:plesiosaurus_vial",
+        "data": { "id": "pelagic_prehistory:plesiosaurus_vial" },
         "weight": 8
       },
       {
-        "data": "pelagic_prehistory:pliosaurus_vial",
+        "data": { "id": "pelagic_prehistory:pliosaurus_vial" },
         "weight": 3
       },
       {
-        "data": "pelagic_prehistory:prognathodon_vial",
+        "data": { "id": "pelagic_prehistory:prognathodon_vial" },
         "weight": 3
       },
       {
-        "data": "pelagic_prehistory:shonisaurus_vial",
+        "data": { "id": "pelagic_prehistory:shonisaurus_vial" },
         "weight": 2
       },
       {
-        "data": "pelagic_prehistory:eurhinosaurus_vial",
+        "data": { "id": "pelagic_prehistory:eurhinosaurus_vial" },
         "weight": 7
       },
       {
-        "data": "pelagic_prehistory:orthacanthus_vial",
+        "data": { "id": "pelagic_prehistory:orthacanthus_vial" },
         "weight": 10
       },
       {
-        "data": "pelagic_prehistory:spinosaurus_vial",
+        "data": { "id": "pelagic_prehistory:spinosaurus_vial" },
         "weight": 3
       }
     ]

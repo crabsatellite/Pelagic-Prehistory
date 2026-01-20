@@ -3,6 +3,7 @@ package pelagic_prehistory.entity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -19,18 +20,17 @@ import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
 import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.pathfinder.SwimNodeEvaluator;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 import pelagic_prehistory.PPRegistry;
 import pelagic_prehistory.entity.goal.BreachGoal;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class Eurhinosaurus extends WaterAnimal implements GeoEntity {
@@ -56,8 +56,8 @@ public class Eurhinosaurus extends WaterAnimal implements GeoEntity {
     //// METHODS ////
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
     }
 
     @Override
@@ -88,14 +88,7 @@ public class Eurhinosaurus extends WaterAnimal implements GeoEntity {
     protected PathNavigation createNavigation(Level level) {
         WaterBoundPathNavigation nav = new WaterBoundPathNavigation(this, level);
         nav.setCanFloat(true);
-        nav.allowBreaching = true;
-        ((SwimNodeEvaluator) nav.getNodeEvaluator()).allowBreaching = true;
         return nav;
-    }
-
-    @Override
-    protected float getStandingEyeHeight(Pose pose, EntityDimensions dimensions) {
-        return dimensions.height * 0.485F;
     }
 
     @Override

@@ -2,46 +2,39 @@ package pelagic_prehistory.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.capabilities.Capability;
-import net.neoforged.neoforge.capabilities.ForgeCapabilities;
-import net.neoforged.neoforge.common.util.LazyOptional;
 import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.wrapper.EmptyHandler;
 import net.neoforged.neoforge.items.wrapper.InvWrapper;
 import org.jetbrains.annotations.Nullable;
-import pelagic_prehistory.PPRegistry;
-import pelagic_prehistory.menu.AnalyzerMenu;
-import pelagic_prehistory.recipe.AnalyzerRecipe;
 
 import java.util.Optional;
 
-public abstract class PPBlockEntityBase<R extends Recipe<?>> extends BlockEntity implements Container, MenuProvider {
+public abstract class PPBlockEntityBase<I extends RecipeInput, R extends Recipe<I>> extends BlockEntity implements Container, MenuProvider {
 
     protected final NonNullList<ItemStack> inventory;
-    protected LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> createUnSidedHandler());
+    protected IItemHandler itemHandler;
 
     protected final ContainerData data;
     protected int progress;
@@ -50,6 +43,7 @@ public abstract class PPBlockEntityBase<R extends Recipe<?>> extends BlockEntity
     public PPBlockEntityBase(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
         this.inventory = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
+        this.itemHandler = createUnSidedHandler();
         this.maxProgress = 120;
         this.data = new ContainerData() {
             @Override
@@ -91,30 +85,30 @@ public abstract class PPBlockEntityBase<R extends Recipe<?>> extends BlockEntity
 
     // RECIPE //
 
-    protected abstract Container createInputContainer();
+    protected abstract I createRecipeInput();
 
-    protected abstract Optional<R> getRecipeFor(final Level level, final Container input);
+    protected abstract Optional<RecipeHolder<R>> getRecipeFor(final Level level, final I input);
 
-    protected abstract void assembleRecipe(final Level level, final Container input, R recipe);
+    protected abstract void assembleRecipe(final Level level, final I input, R recipe);
 
     protected boolean hasRecipe(Level level) {
-        // create container with input items only
-        final Container input = createInputContainer();
+        // create recipe input
+        final I input = createRecipeInput();
         // locate matching recipe
-        Optional<R> oRecipe = getRecipeFor(level, input);
+        Optional<RecipeHolder<R>> oRecipe = getRecipeFor(level, input);
         return oRecipe.isPresent();
     }
 
     protected void assembleRecipe(Level level) {
-        // create container with input items only
-        final Container input = createInputContainer();
+        // create recipe input
+        final I input = createRecipeInput();
         // locate matching recipe
-        Optional<R> oRecipe = getRecipeFor(level, input);
+        Optional<RecipeHolder<R>> oRecipe = getRecipeFor(level, input);
         if(oRecipe.isEmpty()) {
             return;
         }
         // assemble recipe
-        this.assembleRecipe(level, input, oRecipe.get());
+        this.assembleRecipe(level, input, oRecipe.get().value());
     }
 
     protected void resetProgress() {
@@ -125,23 +119,8 @@ public abstract class PPBlockEntityBase<R extends Recipe<?>> extends BlockEntity
 
     protected abstract IItemHandler createUnSidedHandler();
 
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
-        if (!this.remove && cap == ForgeCapabilities.ITEM_HANDLER) {
-            return itemHandler.cast();
-        }
-        return super.getCapability(cap, side);
-    }
-
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        itemHandler.invalidate();
-    }
-
-    @Override
-    public void reviveCaps() {
-        super.reviveCaps();
-        itemHandler = LazyOptional.of(() -> createUnSidedHandler());
+    public IItemHandler getItemHandler(@Nullable Direction side) {
+        return itemHandler;
     }
 
     // CONTAINER //
@@ -226,19 +205,19 @@ public abstract class PPBlockEntityBase<R extends Recipe<?>> extends BlockEntity
     private static final String KEY_MAX_PROGRESS = "MaxProgress";
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
         progress = tag.getInt(KEY_PROGRESS);
         maxProgress = tag.getInt(KEY_MAX_PROGRESS);
-        ContainerHelper.loadAllItems(tag, getInventory());
+        ContainerHelper.loadAllItems(tag, getInventory(), registries);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
         tag.putInt(KEY_PROGRESS, progress);
         tag.putInt(KEY_MAX_PROGRESS, maxProgress);
-        ContainerHelper.saveAllItems(tag, getInventory());
+        ContainerHelper.saveAllItems(tag, getInventory(), registries);
     }
 
     // SOUND //

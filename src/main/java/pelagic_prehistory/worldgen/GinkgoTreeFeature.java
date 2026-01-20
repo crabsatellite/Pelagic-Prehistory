@@ -3,8 +3,6 @@ package pelagic_prehistory.worldgen;
 
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -27,7 +25,7 @@ import pelagic_prehistory.PelagicPrehistory;
 
 public class GinkgoTreeFeature extends Feature<TreeConfiguration> {
 
-    private static final TagKey<Block> GINKGO_TREE_REPLACEABLE = BuiltInRegistries.BLOCK.tags().createTagKey(ResourceLocation.fromNamespaceAndPath(PelagicPrehistory.MODID, "ginkgo_tree_replaceable"));
+    private static final TagKey<Block> GINKGO_TREE_REPLACEABLE = TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(PelagicPrehistory.MODID, "ginkgo_tree_replaceable"));
     private static final LocStructureProcessor HAS_REPLACEABLE = new LocStructureProcessor(new TagMatchTest(GINKGO_TREE_REPLACEABLE));
 
 

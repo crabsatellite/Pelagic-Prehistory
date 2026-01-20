@@ -1,25 +1,21 @@
 package pelagic_prehistory.block;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.wrapper.EmptyHandler;
 import net.neoforged.neoforge.items.wrapper.InvWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,12 +23,13 @@ import pelagic_prehistory.PPRegistry;
 import pelagic_prehistory.PelagicPrehistory;
 import pelagic_prehistory.menu.AnalyzerMenu;
 import pelagic_prehistory.recipe.AnalyzerRecipe;
+import pelagic_prehistory.recipe.AnalyzerRecipeInput;
 
 import java.util.Optional;
 
-public class AnalyzerBlockEntity extends PPBlockEntityBase<AnalyzerRecipe> {
+public class AnalyzerBlockEntity extends PPBlockEntityBase<AnalyzerRecipeInput, AnalyzerRecipe> {
 
-    private static final TagKey<Item> FOSSIL = BuiltInRegistries.ITEM.tags().createTagKey(ResourceLocation.fromNamespaceAndPath(PelagicPrehistory.MODID, "fossil"));
+    private static final TagKey<Item> FOSSIL = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(PelagicPrehistory.MODID, "fossil"));
 
     public AnalyzerBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
@@ -68,28 +65,28 @@ public class AnalyzerBlockEntity extends PPBlockEntityBase<AnalyzerRecipe> {
     // BLOCK ENTITY BASE //
 
     @Override
-    protected Container createInputContainer() {
-        return new SimpleContainer(getItem(0));
+    protected AnalyzerRecipeInput createRecipeInput() {
+        return new AnalyzerRecipeInput(getItem(0));
     }
 
     @Override
-    protected Optional<AnalyzerRecipe> getRecipeFor(Level level, Container input) {
+    protected Optional<RecipeHolder<AnalyzerRecipe>> getRecipeFor(Level level, AnalyzerRecipeInput input) {
         return level.getRecipeManager().getRecipeFor(PPRegistry.RecipeReg.ANALYZING_TYPE.get(), input, level);
     }
 
     @Override
-    protected void assembleRecipe(Level level, Container input, AnalyzerRecipe recipe) {
+    protected void assembleRecipe(Level level, AnalyzerRecipeInput input, AnalyzerRecipe recipe) {
         final ItemStack output = recipe.assemble(input, level.getRandom());
         if(output.isEmpty()) {
             // recipe produced nothing (error or empty pool) - pause machine to prevent item loss
             return;
         }
-        final IItemHandler itemHandler = this.itemHandler.orElse(EmptyHandler.INSTANCE);
-        for(int i = 1, n = itemHandler.getSlots(); i < n; i++) {
+        final IItemHandler handler = this.itemHandler;
+        for(int i = 1, n = handler.getSlots(); i < n; i++) {
             // check if item fits (simulate)
-            if(itemHandler.insertItem(i, output.copy(), true).isEmpty()) {
+            if(handler.insertItem(i, output.copy(), true).isEmpty()) {
                 // insert item (execute)
-                itemHandler.insertItem(i, output.copy(), false);
+                handler.insertItem(i, output.copy(), false);
                 // remove input
                 this.removeItem(0, 1);
                 this.resetProgress();

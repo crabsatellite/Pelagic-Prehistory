@@ -60,7 +60,7 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ItemAbility;
-import net.neoforged.neoforge.common.extensions.IForgeMenuType;
+import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
@@ -118,16 +118,16 @@ public final class PPRegistry {
     private static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(Registries.SOUND_EVENT, PelagicPrehistory.MODID);
     private static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, PelagicPrehistory.MODID);
 
-    public static void register() {
-        BlockReg.register();
-        ItemReg.register();
-        BlockEntityReg.register();
-        EntityReg.register();
-        FeatureReg.register();
-        MenuReg.register();
-        RecipeReg.register();
-        SoundReg.register();
-        CREATIVE_MODE_TABS.register(// TODO: Get IEventBus from constructor parameter instead);
+    public static void register(IEventBus modEventBus) {
+        BlockReg.register(modEventBus);
+        ItemReg.register(modEventBus);
+        BlockEntityReg.register(modEventBus);
+        EntityReg.register(modEventBus);
+        FeatureReg.register(modEventBus);
+        MenuReg.register(modEventBus);
+        RecipeReg.register(modEventBus);
+        SoundReg.register(modEventBus);
+        CREATIVE_MODE_TABS.register(modEventBus);
     }
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB = CREATIVE_MODE_TABS.register(PelagicPrehistory.MODID, () ->
@@ -142,11 +142,11 @@ public final class PPRegistry {
 
     public static final class ItemReg {
 
-        private static final List<DeferredHolder<Item>> VIAL_ITEMS = new ArrayList<>();
-        private static final List<DeferredHolder<Item>> SPAWN_EGGS = new ArrayList<>();
+        private static final List<DeferredHolder<Item, ? extends Item>> VIAL_ITEMS = new ArrayList<>();
+        private static final List<DeferredHolder<Item, ? extends Item>> SPAWN_EGGS = new ArrayList<>();
 
-        public static void register() {
-            ITEMS.register(// TODO: Get IEventBus from constructor parameter instead);
+        public static void register(IEventBus modEventBus) {
+            ITEMS.register(modEventBus);
             VIAL_ITEMS.add(UNKNOWN_VIAL);
         }
 
@@ -241,11 +241,11 @@ public final class PPRegistry {
             return ITEMS.register(name, supplier);
         }
 
-        public static List<DeferredHolder<Item>> getVialItems() {
+        public static List<DeferredHolder<Item, ? extends Item>> getVialItems() {
             return ImmutableList.copyOf(VIAL_ITEMS);
         }
 
-        public static List<DeferredHolder<Item>> getSpawnEggs() {
+        public static List<DeferredHolder<Item, ? extends Item>> getSpawnEggs() {
             return ImmutableList.copyOf(SPAWN_EGGS);
         }
 
@@ -253,8 +253,8 @@ public final class PPRegistry {
 
     public static final class BlockReg {
 
-        public static void register() {
-            BLOCKS.register(// TODO: Get IEventBus from constructor parameter instead);
+        public static void register(IEventBus modEventBus) {
+            BLOCKS.register(modEventBus);
         }
 
         public static final DeferredHolder<Block, Block> ANALYZER = registerWithItem("analyzer", () ->
@@ -265,18 +265,18 @@ public final class PPRegistry {
         public static final DeferredHolder<Block, Block> ANCIENT_SEDIMENT_BRICKS = registerWithItem("ancient_sediment_bricks", () ->
                 new Block(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_BROWN).requiresCorrectToolForDrops().strength(3.0F, 6.0F).sound(SoundType.DEEPSLATE)));
         public static final DeferredHolder<Block, Block> ANCIENT_SEDIMENT_FOSSIL = registerWithItem("ancient_sediment_fossil", () ->
-                new DropExperienceBlock(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_BROWN).requiresCorrectToolForDrops().strength(4.0F, 8.0F).sound(SoundType.DEEPSLATE), UniformInt.of(0, 2)));
+                new DropExperienceBlock(UniformInt.of(0, 2), BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_BROWN).requiresCorrectToolForDrops().strength(4.0F, 8.0F).sound(SoundType.DEEPSLATE)));
         public static final DeferredHolder<Block, Block> ANCIENT_SEDIMENT_TABLETS = registerWithItem("ancient_sediment_tablets", () ->
                 new Block(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_BROWN).requiresCorrectToolForDrops().strength(3.0F, 6.0F).sound(SoundType.DEEPSLATE)));
         public static final DeferredHolder<Block, Block> ANCIENT_SEDIMENT_COAL_ORE = registerWithItem("ancient_sediment_coal_ore", () ->
-                new DropExperienceBlock(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_BROWN).requiresCorrectToolForDrops().strength(4.0F, 8.0F).sound(SoundType.DEEPSLATE), UniformInt.of(0, 2)));
+                new DropExperienceBlock(UniformInt.of(0, 2), BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_BROWN).requiresCorrectToolForDrops().strength(4.0F, 8.0F).sound(SoundType.DEEPSLATE)));
         public static final DeferredHolder<Block, Block> CHARNIA = registerWithItem("charnia", () ->
                 new CharniaBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WATER).noCollission().instabreak().sound(SoundType.WET_GRASS).offsetType(BlockBehaviour.OffsetType.XZ).replaceable().pushReaction(PushReaction.DESTROY)),
                 b -> ItemReg.register("charnia", () -> new DoubleHighBlockItem(b.get(), new Item.Properties())));
         public static final DeferredHolder<Block, Block> GREEN_SEA_SPONGE = registerWithItem("green_sea_sponge", () ->
                 new SeaSpongeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WATER).noCollission().instabreak().sound(SoundType.WET_GRASS).replaceable().pushReaction(PushReaction.DESTROY)));
         public static final DeferredHolder<Block, Block> GINKGO_SAPLING = registerWithItem("ginkgo_sapling", () ->
-                new SaplingBlock(new GinkgoTreeGrower(), BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS).pushReaction(PushReaction.DESTROY)));
+                new SaplingBlock(GinkgoTreeGrower.GROWER, BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS).pushReaction(PushReaction.DESTROY)));
         public static final DeferredHolder<Block, Block> GINKGO_LOG = registerWoodBlocks("ginkgo", 2.0F, 3.0F, MapColor.WOOD, MapColor.SAND, 5, 5, 20);
         public static final DeferredHolder<Block, Block> GINKGO_LEAVES = registerLeaves("ginkgo", 30, 60);
 
@@ -284,19 +284,19 @@ public final class PPRegistry {
             return registerWithItem(name, supplier, ItemReg::registerBlockItem);
         }
 
-        private static DeferredHolder<Block, Block> registerWithItem(final String name, final Supplier<Block> blockSupplier, final Function<DeferredHolder<Block>, DeferredHolder<Item>> itemSupplier) {
+        private static DeferredHolder<Block, Block> registerWithItem(final String name, final Supplier<Block> blockSupplier, final Function<DeferredHolder<Block, Block>, DeferredHolder<Item, ? extends Item>> itemSupplier) {
             final DeferredHolder<Block, Block> block = BLOCKS.register(name, blockSupplier);
-            final DeferredHolder<Item, Item> item = itemSupplier.apply(block);
+            final DeferredHolder<Item, ? extends Item> item = itemSupplier.apply(block);
             return block;
         }
 
         private static DeferredHolder<Block, Block> registerBlockSlabStairsWallPlateButton(final String name, final BlockBehaviour.Properties properties) {
             final DeferredHolder<Block, Block> block = registerWithItem(name, () -> new Block(properties));
             final DeferredHolder<Block, Block> slab = registerWithItem(name + "_slab", () -> new SlabBlock(properties));
-            final DeferredHolder<Block, Block> stairs = registerWithItem(name + "_stairs", () -> new StairBlock(() -> block.get().defaultBlockState(), properties));
+            final DeferredHolder<Block, Block> stairs = registerWithItem(name + "_stairs", () -> new StairBlock(block.get().defaultBlockState(), properties));
             final DeferredHolder<Block, Block> walls = registerWithItem(name + "_wall", () -> new WallBlock(properties));
-            final DeferredHolder<Block, Block> pressurePlate = registerWithItem(name + "_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, properties, BlockSetType.STONE));
-            final DeferredHolder<Block, Block> button = registerWithItem(name + "_button", () -> new ButtonBlock(BlockBehaviour.Properties.of().noCollission().strength(0.5F).sound(SoundType.STONE).pushReaction(PushReaction.DESTROY), BlockSetType.STONE, 20, false));
+            final DeferredHolder<Block, Block> pressurePlate = registerWithItem(name + "_pressure_plate", () -> new PressurePlateBlock(BlockSetType.STONE, properties));
+            final DeferredHolder<Block, Block> button = registerWithItem(name + "_button", () -> new ButtonBlock(BlockSetType.STONE, 20, BlockBehaviour.Properties.of().noCollission().strength(0.5F).sound(SoundType.STONE).pushReaction(PushReaction.DESTROY)));
             return block;
         }
 
@@ -331,13 +331,13 @@ public final class PPRegistry {
             ItemReg.registerBlockItem(strippedWood);
             final DeferredHolder<Block, Block> planks = registerWithItem(name + "_planks", () -> new FlammableBlock(woodProperties, fireSpread, planksFlammability));
             final DeferredHolder<Block, Block> slab = registerWithItem(name + "_slab", () -> new FlammableSlabBlock(woodProperties, fireSpread, planksFlammability));
-            final DeferredHolder<Block, Block> stairs = registerWithItem(name + "_stairs", () -> new FlammableStairBlock(() -> planks.get().defaultBlockState(), woodProperties, fireSpread, planksFlammability));
-            final DeferredHolder<Block, Block> door = registerWithItem(name + "_door", () -> new DoorBlock(doorProperties, BlockSetType.OAK));
-            final DeferredHolder<Block, Block> trapdoor = registerWithItem(name + "_trapdoor", () -> new TrapDoorBlock(doorProperties, BlockSetType.OAK));
-            final DeferredHolder<Block, Block> pressurePlate = registerWithItem(name + "_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, woodProperties, BlockSetType.OAK));
-            final DeferredHolder<Block, Block> button = registerWithItem(name + "_button", () -> new ButtonBlock(BlockBehaviour.Properties.of().noCollission().strength(0.5F).sound(SoundType.WOOD).pushReaction(PushReaction.DESTROY), BlockSetType.OAK, 30, true));
+            final DeferredHolder<Block, Block> stairs = registerWithItem(name + "_stairs", () -> new FlammableStairBlock(planks.get().defaultBlockState(), woodProperties, fireSpread, planksFlammability));
+            final DeferredHolder<Block, Block> door = registerWithItem(name + "_door", () -> new DoorBlock(BlockSetType.OAK, doorProperties));
+            final DeferredHolder<Block, Block> trapdoor = registerWithItem(name + "_trapdoor", () -> new TrapDoorBlock(BlockSetType.OAK, doorProperties));
+            final DeferredHolder<Block, Block> pressurePlate = registerWithItem(name + "_pressure_plate", () -> new PressurePlateBlock(BlockSetType.OAK, woodProperties));
+            final DeferredHolder<Block, Block> button = registerWithItem(name + "_button", () -> new ButtonBlock(BlockSetType.OAK, 30, BlockBehaviour.Properties.of().noCollission().strength(0.5F).sound(SoundType.WOOD).pushReaction(PushReaction.DESTROY)));
             final DeferredHolder<Block, Block> fence = registerWithItem(name + "_fence", () -> new FenceBlock(woodProperties));
-            final DeferredHolder<Block, Block> fenceGate = registerWithItem(name + "_fence_gate", () -> new FenceGateBlock(woodProperties, WoodType.OAK));
+            final DeferredHolder<Block, Block> fenceGate = registerWithItem(name + "_fence_gate", () -> new FenceGateBlock(WoodType.OAK, woodProperties));
             return log;
         }
 
@@ -357,8 +357,8 @@ public final class PPRegistry {
 
     public static final class BlockEntityReg {
 
-        public static void register() {
-            BLOCK_ENTITY_TYPES.register(// TODO: Get IEventBus from constructor parameter instead);
+        public static void register(IEventBus modEventBus) {
+            BLOCK_ENTITY_TYPES.register(modEventBus);
         }
 
        public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AnalyzerBlockEntity>> ANALYZER = BLOCK_ENTITY_TYPES.register("analyzer", () ->
@@ -374,10 +374,10 @@ public final class PPRegistry {
 
     public static final class EntityReg {
 
-        public static void register() {
-            ENTITY_TYPES.register(// TODO: Get IEventBus from constructor parameter instead);
-            // TODO: Get IEventBus from constructor parameter instead.addListener(EntityReg::onEntityAttributeCreation);
-            // TODO: Get IEventBus from constructor parameter instead.addListener(EntityReg::onRegisterSpawnPlacement);
+        public static void register(IEventBus modEventBus) {
+            ENTITY_TYPES.register(modEventBus);
+            modEventBus.addListener(EntityReg::onEntityAttributeCreation);
+            modEventBus.addListener(EntityReg::onRegisterSpawnPlacement);
         }
 
         public static void onEntityAttributeCreation(final EntityAttributeCreationEvent event) {
@@ -494,31 +494,24 @@ public final class PPRegistry {
 
     public static final class FeatureReg {
 
-        public static void register() {
-            FEATURES.register(// TODO: Get IEventBus from constructor parameter instead);
-            STRUCTURE_PROCESSORS.register(// TODO: Get IEventBus from constructor parameter instead);
-            // TODO: Get IEventBus from constructor parameter instead.addListener(FeatureReg::registerStructureProcessors);
+        public static void register(IEventBus modEventBus) {
+            FEATURES.register(modEventBus);
+            STRUCTURE_PROCESSORS.register(modEventBus);
         }
 
-        public static StructureProcessorType<LocStructureProcessor> LOC_PROCESSOR;
-        public static DeferredHolder<GinkgoTreeFeature> GINKGO_TREE_FEATURE = FEATURES.register("ginkgo_tree", () -> new GinkgoTreeFeature(TreeConfiguration.CODEC));
-
-        private static void registerStructureProcessors(final FMLCommonSetupEvent event) {
-            event.enqueueWork(() -> {
-                ResourceLocation locProcessorId = ResourceLocation.fromNamespaceAndPath(PelagicPrehistory.MODID, "loc");
-                LOC_PROCESSOR = StructureProcessorType.register(locProcessorId.toString(), LocStructureProcessor.CODEC);
-            });
-        }
+        public static final DeferredHolder<StructureProcessorType<?>, StructureProcessorType<LocStructureProcessor>> LOC_PROCESSOR = 
+            STRUCTURE_PROCESSORS.register("loc", () -> () -> LocStructureProcessor.CODEC);
+        public static DeferredHolder<Feature<?>, GinkgoTreeFeature> GINKGO_TREE_FEATURE = FEATURES.register("ginkgo_tree", () -> new GinkgoTreeFeature(TreeConfiguration.CODEC));
     }
 
     public static final class MenuReg {
 
-        public static void register() {
-            MENU_TYPES.register(// TODO: Get IEventBus from constructor parameter instead);
+        public static void register(IEventBus modEventBus) {
+            MENU_TYPES.register(modEventBus);
         }
 
         public static final DeferredHolder<MenuType<?>, MenuType<AnalyzerMenu>> ANALYZER = MENU_TYPES.register("analyzer", () ->
-                IForgeMenuType.create(((windowId, inv, data) -> {
+                IMenuTypeExtension.create(((windowId, inv, data) -> {
                     final BlockPos pos = data.readBlockPos();
                     return new AnalyzerMenu(MenuReg.ANALYZER.get(), windowId, inv, (AnalyzerBlockEntity) inv.player.level().getBlockEntity(pos));
                 })
@@ -526,7 +519,7 @@ public final class PPRegistry {
         );
 
         public static final DeferredHolder<MenuType<?>, MenuType<InfuserMenu>> INFUSER = MENU_TYPES.register("infuser", () ->
-                IForgeMenuType.create(((windowId, inv, data) -> {
+                IMenuTypeExtension.create(((windowId, inv, data) -> {
                             final BlockPos pos = data.readBlockPos();
                             return new InfuserMenu(MenuReg.INFUSER.get(), windowId, inv, (InfuserBlockEntity) inv.player.level().getBlockEntity(pos));
                         })
@@ -536,22 +529,22 @@ public final class PPRegistry {
 
     public static final class RecipeReg {
 
-        public static void register() {
-            RECIPE_SERIALIZERS.register(// TODO: Get IEventBus from constructor parameter instead);
-            RECIPE_TYPES.register(// TODO: Get IEventBus from constructor parameter instead);
+        public static void register(IEventBus modEventBus) {
+            RECIPE_SERIALIZERS.register(modEventBus);
+            RECIPE_TYPES.register(modEventBus);
         }
 
         public static final DeferredHolder<RecipeType<?>, RecipeType<AnalyzerRecipe>> ANALYZING_TYPE = RECIPE_TYPES.register("analyzing", () -> RecipeType.simple(ResourceLocation.fromNamespaceAndPath(PelagicPrehistory.MODID, "analyzing")));
         public static final DeferredHolder<RecipeType<?>, RecipeType<InfuserRecipe>> INFUSING_TYPE = RECIPE_TYPES.register("infusing", () -> RecipeType.simple(ResourceLocation.fromNamespaceAndPath(PelagicPrehistory.MODID, "infusing")));
 
-        public static final DeferredHolder<RecipeSerializer<AnalyzerRecipe>> ANALYZING_SERIALIZER = RECIPE_SERIALIZERS.register("analyzing", () -> new AnalyzerRecipe.Serializer());
-        public static final DeferredHolder<RecipeSerializer<InfuserRecipe>> INFUSING_SERIALIZER = RECIPE_SERIALIZERS.register("infusing", () -> new InfuserRecipe.Serializer());
+        public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<AnalyzerRecipe>> ANALYZING_SERIALIZER = RECIPE_SERIALIZERS.register("analyzing", () -> new AnalyzerRecipe.Serializer());
+        public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<InfuserRecipe>> INFUSING_SERIALIZER = RECIPE_SERIALIZERS.register("infusing", () -> new InfuserRecipe.Serializer());
     }
 
     public static final class SoundReg {
 
-        public static void register() {
-            SOUND_EVENTS.register(// TODO: Get IEventBus from constructor parameter instead);
+        public static void register(IEventBus modEventBus) {
+            SOUND_EVENTS.register(modEventBus);
         }
 
         private static DeferredHolder<SoundEvent, SoundEvent> registerSound(final String name) {
@@ -636,7 +629,7 @@ public final class PPRegistry {
 
         @Override
         public BlockState getToolModifiedState(BlockState state, UseOnContext context, ItemAbility toolAction, boolean simulate) {
-            if (toolAction == ItemAbilitys.AXE_STRIP && strippedResult != null) {
+            if (toolAction == ItemAbilities.AXE_STRIP && strippedResult != null) {
                 return strippedResult.get().defaultBlockState().setValue(RotatedPillarBlock.AXIS, state.getValue(RotatedPillarBlock.AXIS));
             }
             return super.getToolModifiedState(state, context, toolAction, simulate);
@@ -670,7 +663,7 @@ public final class PPRegistry {
         private final int fireSpread;
         private final int flammability;
 
-        public FlammableStairBlock(Supplier<BlockState> state, Properties properties, int fireSpread, int flammability) {
+        public FlammableStairBlock(BlockState state, Properties properties, int fireSpread, int flammability) {
             super(state, properties);
             this.fireSpread = fireSpread;
             this.flammability = flammability;

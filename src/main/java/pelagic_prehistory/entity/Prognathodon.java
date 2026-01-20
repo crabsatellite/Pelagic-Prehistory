@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -32,12 +33,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import pelagic_prehistory.entity.goal.FloppingGoal;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.UUID;
@@ -72,8 +73,8 @@ public class Prognathodon extends WaterAnimal implements GeoEntity, NeutralMob, 
     //// METHODS ////
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
     }
 
     @Override
@@ -116,11 +117,6 @@ public class Prognathodon extends WaterAnimal implements GeoEntity, NeutralMob, 
                 return level.isWaterAt(pPos.above()) && super.isStableDestination(pPos);
             }
         };
-    }
-
-    @Override
-    protected float getStandingEyeHeight(Pose pose, EntityDimensions dimensions) {
-        return dimensions.height * 0.485F;
     }
 
     @Override
@@ -214,7 +210,6 @@ public class Prognathodon extends WaterAnimal implements GeoEntity, NeutralMob, 
         } else {
             state.getController().setAnimation(ANIM_SWIM);
         }
-        state.getController().setTransitionLength(6);
         return PlayState.CONTINUE;
     }
 

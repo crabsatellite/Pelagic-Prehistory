@@ -1,7 +1,8 @@
 package pelagic_prehistory;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLEnvironment;
 import com.mojang.logging.LogUtils;
@@ -15,12 +16,13 @@ public class PelagicPrehistory {
 
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public PelagicPrehistory() {
-        PPRegistry.register();
-        PPEvents.register();
+    public PelagicPrehistory(IEventBus modEventBus, ModContainer modContainer) {
+        PPRegistry.register(modEventBus);
+        PPEvents.register(modEventBus);
         // client events
-        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ClientEvents::register);
+        if (FMLEnvironment.dist == Dist.CLIENT) {
+            ClientEvents.register(modEventBus);
+        }
     }
-
 
 }

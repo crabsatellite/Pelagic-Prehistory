@@ -1,35 +1,28 @@
 {
-  "type": "forge:conditional",
-  "recipes": [
+  "neoforge:conditions": [
     {
-      "conditions": [
-        {
-          "type": "forge:mod_loaded",
-          "modid": "unusualprehistory"
-        }
-      ],
-      "recipe": {
-        "type": "pelagic_prehistory:analyzing",
-        "input": {
-          "tag": "unusualprehistory:petrified_wood"
-        },
-        "output": {
-          "pool": [
-            {
-              "weight": 50,
-              "data": "minecraft:coal"
-            },
-            {
-              "weight": 50,
-              "data": "minecraft:cobblestone"
-            },
-            {
-              "weight": 15,
-              "data": "unusualprehistory:ginkgo_flask"
-            }
-          ]
-        }
-      }
+      "type": "neoforge:mod_loaded",
+      "modid": "unusualprehistory"
     }
-  ]
+  ],
+  "type": "pelagic_prehistory:analyzing",
+  "input": {
+    "tag": "unusualprehistory:petrified_wood"
+  },
+  "output": {
+    "pool": [
+      {
+        "weight": 50,
+        "data": "minecraft:coal"
+      },
+      {
+        "weight": 50,
+        "data": "minecraft:cobblestone"
+      },
+      {
+        "weight": 15,
+        "data": "unusualprehistory:ginkgo_flask"
+      }
+    ]
+  }
 }

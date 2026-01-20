@@ -27,7 +27,6 @@ public class InfuserScreen extends AbstractContainerScreen<InfuserMenu> {
 
     @Override
     protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
-        renderBackground(pGuiGraphics);
         // render background
         pGuiGraphics.blit(TEXTURE, this.leftPos, this.topPos, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
         // render progress

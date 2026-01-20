@@ -1,12 +1,6 @@
 {
-  "type": "c:add_features",
-  "biomes": {
-    "type": "c:and",
-    "values": [
-      "#minecraft:is_ocean",
-      "#minecraft:is_overworld"
-    ]
-  },
+  "type": "neoforge:add_features",
+  "biomes": "#minecraft:is_ocean",
   "features": [
     "pelagic_prehistory:ore_ancient_sediment",
     "pelagic_prehistory:ore_ancient_sediment_fossil",

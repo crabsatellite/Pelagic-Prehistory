@@ -11,14 +11,14 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import pelagic_prehistory.PPRegistry;
 
 import javax.annotation.Nullable;
 
 public class LocStructureProcessor extends StructureProcessor {
 
-    public static final Codec<LocStructureProcessor> CODEC = RuleTest.CODEC.xmap(LocStructureProcessor::new, LocStructureProcessor::getLocPredicate).stable();
+    public static final MapCodec<LocStructureProcessor> CODEC = RuleTest.CODEC.xmap(LocStructureProcessor::new, LocStructureProcessor::getLocPredicate).fieldOf("predicate");
 
     public static final LocStructureProcessor HAS_AIR = new LocStructureProcessor(new BlockMatchTest(Blocks.AIR));
 
@@ -46,6 +46,6 @@ public class LocStructureProcessor extends StructureProcessor {
 
     @Override
     protected StructureProcessorType<?> getType() {
-        return PPRegistry.FeatureReg.LOC_PROCESSOR;
+        return PPRegistry.FeatureReg.LOC_PROCESSOR.get();
     }
 }

@@ -18,12 +18,21 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.BlockHitResult;
+import com.mojang.serialization.MapCodec;
 import org.jetbrains.annotations.Nullable;
 import pelagic_prehistory.PPRegistry;
 
 public class InfuserBlock extends HorizontalDirectionalBlock implements EntityBlock {
+
+    public static final MapCodec<InfuserBlock> CODEC = simpleCodec(InfuserBlock::new);
+
     public InfuserBlock(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
+        return CODEC;
     }
 
     @Override
@@ -50,9 +59,9 @@ public class InfuserBlock extends HorizontalDirectionalBlock implements EntityBl
     }
 
     @Override
-    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+    protected InteractionResult useWithoutItem(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, BlockHitResult pHit) {
         if (!pLevel.isClientSide() && pLevel.getBlockEntity(pPos) instanceof InfuserBlockEntity blockEntity) {
-            NetworkHooks.openScreen((ServerPlayer) pPlayer, blockEntity, data -> data.writeBlockPos(pPos));
+            pPlayer.openMenu(blockEntity, data -> data.writeBlockPos(pPos));
             return InteractionResult.CONSUME;
         }
         return InteractionResult.SUCCESS;

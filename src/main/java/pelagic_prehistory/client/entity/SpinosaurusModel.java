@@ -1,7 +1,7 @@
 package pelagic_prehistory.client.entity;
 
 import pelagic_prehistory.entity.Spinosaurus;
-import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.animation.AnimationState;
 
 public class SpinosaurusModel<T extends Spinosaurus> extends SimplePitchGeoModel<T> {
 

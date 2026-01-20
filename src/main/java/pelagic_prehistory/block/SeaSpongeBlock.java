@@ -1,8 +1,10 @@
 package pelagic_prehistory.block;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
@@ -17,17 +19,23 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.common.IForgeShearable;
 
 import javax.annotation.Nullable;
 
-public class SeaSpongeBlock extends BushBlock implements LiquidBlockContainer, IForgeShearable {
+public class SeaSpongeBlock extends BushBlock implements LiquidBlockContainer {
+
+    public static final MapCodec<SeaSpongeBlock> CODEC = simpleCodec(SeaSpongeBlock::new);
 
     protected static final float AABB_OFFSET = 2.0F;
     protected static final VoxelShape SHAPE = Block.box(AABB_OFFSET, 0.0D, AABB_OFFSET, 16.0D - AABB_OFFSET, 12.0D, 16.0D - AABB_OFFSET);
 
     public SeaSpongeBlock(BlockBehaviour.Properties properties) {
         super(properties);
+    }
+
+    @Override
+    public MapCodec<SeaSpongeBlock> codec() {
+        return CODEC;
     }
 
     public VoxelShape getShape(BlockState blockState, BlockGetter level, BlockPos blockPos, CollisionContext context) {
@@ -62,7 +70,7 @@ public class SeaSpongeBlock extends BushBlock implements LiquidBlockContainer, I
     }
 
     @Override
-    public boolean canPlaceLiquid(BlockGetter pLevel, BlockPos pPos, BlockState pState, Fluid pFluid) {
+    public boolean canPlaceLiquid(@Nullable Player player, BlockGetter pLevel, BlockPos pPos, BlockState pState, Fluid pFluid) {
         return false;
     }
 

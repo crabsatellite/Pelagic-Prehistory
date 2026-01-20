@@ -3,30 +3,26 @@ package pelagic_prehistory.block;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.wrapper.EmptyHandler;
 import net.neoforged.neoforge.items.wrapper.InvWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pelagic_prehistory.PPRegistry;
-import pelagic_prehistory.menu.AnalyzerMenu;
 import pelagic_prehistory.menu.InfuserMenu;
 import pelagic_prehistory.recipe.InfuserRecipe;
-import pelagic_prehistory.recipe.InfuserRecipe;
+import pelagic_prehistory.recipe.InfuserRecipeInput;
 
 import java.util.Optional;
 
-public class InfuserBlockEntity extends PPBlockEntityBase<InfuserRecipe> {
+public class InfuserBlockEntity extends PPBlockEntityBase<InfuserRecipeInput, InfuserRecipe> {
 
     public InfuserBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
@@ -62,26 +58,26 @@ public class InfuserBlockEntity extends PPBlockEntityBase<InfuserRecipe> {
     // BLOCK ENTITY BASE //
 
     @Override
-    protected Container createInputContainer() {
-        return new SimpleContainer(getItem(0), getItem(1));
+    protected InfuserRecipeInput createRecipeInput() {
+        return new InfuserRecipeInput(getItem(0), getItem(1));
     }
 
     @Override
-    protected Optional<InfuserRecipe> getRecipeFor(Level level, Container input) {
+    protected Optional<RecipeHolder<InfuserRecipe>> getRecipeFor(Level level, InfuserRecipeInput input) {
         return level.getRecipeManager().getRecipeFor(PPRegistry.RecipeReg.INFUSING_TYPE.get(), input, level);
     }
 
     @Override
-    protected void assembleRecipe(Level level, Container input, InfuserRecipe recipe) {
+    protected void assembleRecipe(Level level, InfuserRecipeInput input, InfuserRecipe recipe) {
         final ItemStack output = recipe.assemble(input, level.registryAccess());
         if(output.isEmpty()) {
             return;
         }
-        final IItemHandler itemHandler = this.itemHandler.orElse(EmptyHandler.INSTANCE);
+        final IItemHandler handler = this.itemHandler;
         // check if item fits (simulate)
-        if(itemHandler.insertItem(2, output.copy(), true).isEmpty()) {
+        if(handler.insertItem(2, output.copy(), true).isEmpty()) {
             // insert item (execute)
-            itemHandler.insertItem(2, output.copy(), false);
+            handler.insertItem(2, output.copy(), false);
             // remove input
             this.removeItem(0, 1);
             this.removeItem(1, 1);

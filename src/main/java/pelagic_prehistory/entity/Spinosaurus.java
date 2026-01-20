@@ -8,6 +8,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -39,15 +40,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.neoforge.common.NeoForgeMod;
 import pelagic_prehistory.PPRegistry;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.UUID;
@@ -82,7 +82,7 @@ public class Spinosaurus extends PathfinderMob implements NeutralMob, GeoEntity 
                 .add(Attributes.MAX_HEALTH, 30.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.15D)
                 .add(Attributes.ATTACK_DAMAGE, 8.0D)
-                .add(NeoForgeMod.STEP_HEIGHT_ADDITION.get(), 0.8D);
+                .add(Attributes.STEP_HEIGHT, 1.6D);
     }
 
     public static boolean checkSpinosaurusSpawnRules(EntityType<? extends PathfinderMob> entity, LevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
@@ -106,8 +106,8 @@ public class Spinosaurus extends PathfinderMob implements NeutralMob, GeoEntity 
     //// METHODS ////
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
     }
 
     @Override
@@ -152,11 +152,6 @@ public class Spinosaurus extends PathfinderMob implements NeutralMob, GeoEntity 
     }
 
     @Override
-    public boolean canBreatheUnderwater() {
-        return true;
-    }
-
-    @Override
     public boolean requiresCustomPersistence() {
         return true;
     }
@@ -178,16 +173,6 @@ public class Spinosaurus extends PathfinderMob implements NeutralMob, GeoEntity 
         return super.getWalkTargetValue(pPos, pLevel);
     }
 
-    @Override
-    protected float getStandingEyeHeight(Pose pose, EntityDimensions dimensions) {
-        return dimensions.height * 0.95F;
-    }
-
-    @Override
-    public double getPassengersRidingOffset() {
-        return 1.1D;
-    }
-
     protected boolean shouldSwim() {
         return !getEyeInFluidType().isAir();
     }
@@ -198,7 +183,7 @@ public class Spinosaurus extends PathfinderMob implements NeutralMob, GeoEntity 
     }
 
     private void updateFluidOnBody() {
-        double bodyY = this.getY() + (double) this.getDimensions(this.getPose()).height * 0.5D;
+        double bodyY = this.getY() + (double) this.getDimensions(this.getPose()).height() * 0.5D;
         BlockPos blockpos = BlockPos.containing(this.getX(), bodyY, this.getZ());
         FluidState fluidstate = this.level().getFluidState(blockpos);
         double fluidHeight = (float) blockpos.getY() + fluidstate.getHeight(this.level(), blockpos);

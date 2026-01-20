@@ -1,7 +1,7 @@
 package pelagic_prehistory.client.entity;
 
 import pelagic_prehistory.entity.Irritator;
-import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.animation.AnimationState;
 
 public class IrritatorModel<T extends Irritator> extends SimplePitchGeoModel<T> {
 

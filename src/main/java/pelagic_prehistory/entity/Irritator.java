@@ -9,6 +9,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -49,15 +50,14 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.NeoForgeMod;
 import pelagic_prehistory.PPRegistry;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.EnumSet;
@@ -87,7 +87,7 @@ public class Irritator extends PathfinderMob implements GeoEntity, NeutralMob, E
         this.setPathfindingMalus(PathType.WATER, 0.0F);
         this.moveControl = new Irritator.IrritatorMoveControl(this);
         this.lookControl = new SmoothSwimmingLookControl(this, 20);
-        this.swimmingSize = EntityDimensions.scalable(type.getDimensions().width, type.getDimensions().height * 0.62F);
+        this.swimmingSize = EntityDimensions.scalable(type.getDimensions().width(), type.getDimensions().height() * 0.62F);
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -95,7 +95,7 @@ public class Irritator extends PathfinderMob implements GeoEntity, NeutralMob, E
                 .add(Attributes.MAX_HEALTH, 20.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.32D)
                 .add(Attributes.ATTACK_DAMAGE, 5.0D)
-                .add(NeoForgeMod.STEP_HEIGHT_ADDITION.get(), 0.8D);
+                .add(Attributes.STEP_HEIGHT, 1.8D);
     }
 
     public static boolean checkIrritatorSpawnRules(EntityType<? extends PathfinderMob> entity, LevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
@@ -123,8 +123,8 @@ public class Irritator extends PathfinderMob implements GeoEntity, NeutralMob, E
     //// METHODS ////
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
     }
 
     @Override
@@ -157,7 +157,7 @@ public class Irritator extends PathfinderMob implements GeoEntity, NeutralMob, E
             this.isBodyInWater = false;
             refreshDimensions();
         }
-        if(this.getAirSupply() < 60 && isBodyInWater() && level().getBlockState(BlockPos.containing(position().add(0, getDimensions(getPose()).height, 0))).isAir()) {
+        if(this.getAirSupply() < 60 && isBodyInWater() && level().getBlockState(BlockPos.containing(position().add(0, getDimensions(getPose()).height(), 0))).isAir()) {
             setAirSupply(getMaxAirSupply());
         }
     }
@@ -182,11 +182,6 @@ public class Irritator extends PathfinderMob implements GeoEntity, NeutralMob, E
             return 8.0F;
         }
         return super.getWalkTargetValue(pPos, pLevel);
-    }
-
-    @Override
-    protected float getStandingEyeHeight(Pose pose, EntityDimensions dimensions) {
-        return dimensions.height * (isBodyInWater() ? 0.72F : 0.95F);
     }
 
     @Override
@@ -265,9 +260,8 @@ public class Irritator extends PathfinderMob implements GeoEntity, NeutralMob, E
         return super.decreaseAirSupply(pCurrentAir); //Math.max(1, super.decreaseAirSupply(pCurrentAir));
     }
 
-    @Override
-    public EntityDimensions getDimensions(Pose pPose) {
-        final EntityDimensions dimensions = isBodyInWater() ? swimmingSize : super.getDimensions(pPose);
+    public EntityDimensions getActualDimensions(Pose pPose) {
+        final EntityDimensions dimensions = isBodyInWater() ? swimmingSize : super.getDefaultDimensions(pPose);
         return dimensions.scale(this.getScale());
     }
 
@@ -287,7 +281,7 @@ public class Irritator extends PathfinderMob implements GeoEntity, NeutralMob, E
     }
 
     private void updateFluidOnBody() {
-        double bodyY = this.getY() + getDimensions(getPose()).height * 0.5D;
+        double bodyY = this.getY() + getDimensions(getPose()).height() * 0.5D;
         BlockPos blockpos = BlockPos.containing(this.getX(), bodyY, this.getZ());
         FluidState fluidstate = this.level().getFluidState(blockpos);
         double fluidHeight = (float)blockpos.getY() + fluidstate.getHeight(this.level(), blockpos);
@@ -351,7 +345,6 @@ public class Irritator extends PathfinderMob implements GeoEntity, NeutralMob, E
         } else {
             state.getController().setAnimation(ANIM_IDLE);
         }
-        state.getController().setTransitionLength(4);
         return PlayState.CONTINUE;
     }
 

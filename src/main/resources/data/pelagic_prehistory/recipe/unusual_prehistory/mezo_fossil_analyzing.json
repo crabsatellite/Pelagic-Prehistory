@@ -1,79 +1,72 @@
 {
-  "type": "forge:conditional",
-  "recipes": [
+  "neoforge:conditions": [
     {
-      "conditions": [
-        {
-          "type": "forge:mod_loaded",
-          "modid": "unusualprehistory"
-        }
-      ],
-      "recipe": {
-        "type": "pelagic_prehistory:analyzing",
-        "input": {
-          "item": "unusualprehistory:mezo_fossil"
-        },
-        "output": {
-          "pool": [
-            {
-              "weight": 50,
-              "data": "minecraft:coal"
-            },
-            {
-              "weight": 50,
-              "data": "minecraft:cobblestone"
-            },
-            {
-              "weight": 50,
-              "data": "minecraft:bone"
-            },
-            {
-              "weight": 40,
-              "data": "unusualprehistory:ammonite_flask"
-            },
-            {
-              "weight": 40,
-              "data": "unusualprehistory:anuro_flask"
-            },
-            {
-              "weight": 40,
-              "data": "unusualprehistory:beelz_flask"
-            },
-            {
-              "weight": 40,
-              "data": "unusualprehistory:kentro_flask"
-            },
-            {
-              "weight": 15,
-              "data": "unusualprehistory:majunga_flask"
-            },
-            {
-              "weight": 15,
-              "data": "unusualprehistory:antarcto_flask"
-            },
-            {
-              "weight": 15,
-              "data": "unusualprehistory:austro_flask"
-            },
-            {
-              "weight": 15,
-              "data": "unusualprehistory:raptor_flask"
-            },
-            {
-              "weight": 15,
-              "data": "unusualprehistory:pachy_flask"
-            },
-            {
-              "weight": 15,
-              "data": "unusualprehistory:eryon_flask"
-            },
-            {
-              "weight": 1,
-              "data": "unusualprehistory:ulugh_flask"
-            }
-          ]
-        }
-      }
+      "type": "neoforge:mod_loaded",
+      "modid": "unusualprehistory"
     }
-  ]
+  ],
+  "type": "pelagic_prehistory:analyzing",
+  "input": {
+    "item": "unusualprehistory:mezo_fossil"
+  },
+  "output": {
+    "pool": [
+      {
+        "weight": 50,
+        "data": "minecraft:coal"
+      },
+      {
+        "weight": 50,
+        "data": "minecraft:cobblestone"
+      },
+      {
+        "weight": 50,
+        "data": "minecraft:bone"
+      },
+      {
+        "weight": 40,
+        "data": "unusualprehistory:ammonite_flask"
+      },
+      {
+        "weight": 40,
+        "data": "unusualprehistory:anuro_flask"
+      },
+      {
+        "weight": 40,
+        "data": "unusualprehistory:beelz_flask"
+      },
+      {
+        "weight": 40,
+        "data": "unusualprehistory:kentro_flask"
+      },
+      {
+        "weight": 15,
+        "data": "unusualprehistory:majunga_flask"
+      },
+      {
+        "weight": 15,
+        "data": "unusualprehistory:antarcto_flask"
+      },
+      {
+        "weight": 15,
+        "data": "unusualprehistory:austro_flask"
+      },
+      {
+        "weight": 15,
+        "data": "unusualprehistory:raptor_flask"
+      },
+      {
+        "weight": 15,
+        "data": "unusualprehistory:pachy_flask"
+      },
+      {
+        "weight": 15,
+        "data": "unusualprehistory:eryon_flask"
+      },
+      {
+        "weight": 1,
+        "data": "unusualprehistory:ulugh_flask"
+      }
+    ]
+  }
 }

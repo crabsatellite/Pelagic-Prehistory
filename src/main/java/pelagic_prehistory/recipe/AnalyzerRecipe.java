@@ -1,96 +1,80 @@
 package pelagic_prehistory.recipe;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gson.JsonObject;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import com.mojang.datafixers.util.Either;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.random.WeightedEntry;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import com.mojang.datafixers.util.Either;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.JsonOps;
-import org.jetbrains.annotations.Nullable;
 import pelagic_prehistory.PPRegistry;
-import pelagic_prehistory.PelagicPrehistory;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class AnalyzerRecipe implements Recipe<Container> {
+public class AnalyzerRecipe implements Recipe<AnalyzerRecipeInput> {
 
     private static final WeightedEntry.Wrapper<ItemStack> EMPTY_WRAPPER = WeightedEntry.wrap(ItemStack.EMPTY, 1);
 
-    private static final Codec<ItemStack> ITEM_OR_STACK_CODEC = Codec.either(BuiltInRegistries.ITEM.getCodec(), ItemStack.CODEC)
-            .xmap(either -> either.map(ItemStack::new, Function.identity()),
-                    stack -> stack.getCount() == 1 && !stack.hasTag() ? Either.left(stack.getItem()) : Either.right(stack));
-
-    private static final Codec<WeightedEntry.Wrapper<ItemStack>> WEIGHTED_ENTRY_CODEC = WeightedEntry.Wrapper.codec(ITEM_OR_STACK_CODEC);
+    private static final Codec<WeightedEntry.Wrapper<ItemStack>> WEIGHTED_ENTRY_CODEC = WeightedEntry.Wrapper.codec(ItemStack.CODEC);
     private static final Codec<List<WeightedEntry.Wrapper<ItemStack>>> WEIGHTED_ENTRY_LIST_CODEC = WEIGHTED_ENTRY_CODEC.listOf().fieldOf("pool").codec();
     private static final Codec<List<WeightedEntry.Wrapper<ItemStack>>> WEIGHTED_ENTRY_OR_LIST_CODEC = Codec.either(WEIGHTED_ENTRY_CODEC, WEIGHTED_ENTRY_LIST_CODEC)
             .xmap(either -> either.map(ImmutableList::of, Function.identity()),
                     list -> list.size() == 1 ? Either.left(list.get(0)) : Either.right(list));
 
-    private final ResourceLocation id;
+    public static final MapCodec<AnalyzerRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            Ingredient.CODEC.fieldOf("input").forGetter(r -> r.input),
+            WEIGHTED_ENTRY_OR_LIST_CODEC.fieldOf("output").forGetter(r -> r.results)
+    ).apply(instance, AnalyzerRecipe::new));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, AnalyzerRecipe> STREAM_CODEC = StreamCodec.composite(
+            Ingredient.CONTENTS_STREAM_CODEC, r -> r.input,
+            ByteBufCodecs.fromCodec(WEIGHTED_ENTRY_OR_LIST_CODEC), r -> r.results,
+            AnalyzerRecipe::new
+    );
+
     private final Ingredient input;
     private final List<WeightedEntry.Wrapper<ItemStack>> results;
 
-    public AnalyzerRecipe(final ResourceLocation id, final Ingredient input, final List<WeightedEntry.Wrapper<ItemStack>> results) {
-        this.id = id;
+    public AnalyzerRecipe(final Ingredient input, final List<WeightedEntry.Wrapper<ItemStack>> results) {
         this.input = input;
         this.results = ImmutableList.copyOf(results);
     }
 
     @Override
-    public boolean matches(Container pContainer, Level pLevel) {
+    public boolean matches(AnalyzerRecipeInput recipeInput, Level level) {
         // validate recipe has input
-        if(input.isEmpty()) {
+        if (input.isEmpty()) {
             return false;
         }
-        // validate container has item
-        if(pContainer.getContainerSize() < 1) {
-            return false;
-        }
-        // check if items are the same
-        return input.test(pContainer.getItem(0));
-    }
-
-    /**
-     * @param pContainer the input container
-     * @param registryAccess the registry access
-     * @return the output item
-     * @deprecated use {@link #assemble(Container, RandomSource)}
-     */
-    @Deprecated
-    @Override
-    public ItemStack assemble(Container pContainer, RegistryAccess registryAccess) {
-        return getResultItem(registryAccess);
+        // check if items match
+        return input.test(recipeInput.input());
     }
 
     @Override
-    public boolean canCraftInDimensions(int pWidth, int pHeight) {
+    public ItemStack assemble(AnalyzerRecipeInput recipeInput, HolderLookup.Provider registries) {
+        return getResultItem(registries);
+    }
+
+    @Override
+    public boolean canCraftInDimensions(int width, int height) {
         return true;
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess registryAccess) {
+    public ItemStack getResultItem(HolderLookup.Provider registries) {
         return PPRegistry.ItemReg.UNKNOWN_VIAL.get().getDefaultInstance();
-    }
-
-    @Override
-    public ResourceLocation getId() {
-        return this.id;
     }
 
     @Override
@@ -104,42 +88,24 @@ public class AnalyzerRecipe implements Recipe<Container> {
     }
 
     /**
-     * @param container the container
+     * @param recipeInput the recipe input
      * @param random a random source
      * @return a randomly sampled item stack from the results list, may be empty
      */
-    public ItemStack assemble(final Container container, final RandomSource random) {
-        return Optional.ofNullable(WeightedUtil.sample(results, random)).orElse(EMPTY_WRAPPER).getData();
+    public ItemStack assemble(final AnalyzerRecipeInput recipeInput, final RandomSource random) {
+        return Optional.ofNullable(WeightedUtil.sample(results, random)).orElse(EMPTY_WRAPPER).data();
     }
 
     public static class Serializer implements RecipeSerializer<AnalyzerRecipe> {
 
-        private static final String INPUT = "input";
-        private static final String OUTPUT = "output";
-
         @Override
-        public AnalyzerRecipe fromJson(ResourceLocation pRecipeId, JsonObject pSerializedRecipe) {
-            // parse input item
-            final Ingredient input = /* TODO: Use Ingredient.CODEC.parse(JsonOps.INSTANCE, json).result().orElse(Ingredient.EMPTY) instead */ Ingredient.fromJson(pSerializedRecipe.get(INPUT));
-            // parse result items
-            final List<WeightedEntry.Wrapper<ItemStack>> results = WEIGHTED_ENTRY_OR_LIST_CODEC.parse(JsonOps.INSTANCE, pSerializedRecipe.get(OUTPUT))
-                    .resultOrPartial(s -> PelagicPrehistory.LOGGER.error("[AnalyzerRecipe] Failed to parse recipe results \"" + pRecipeId + "\":\n" + s))
-                    .orElse(List.of());
-            // create recipe
-            return new AnalyzerRecipe(pRecipeId, input, results);
+        public MapCodec<AnalyzerRecipe> codec() {
+            return CODEC;
         }
 
         @Override
-        public @Nullable AnalyzerRecipe fromNetwork(ResourceLocation pRecipeId, FriendlyByteBuf pBuffer) {
-            final Ingredient input = Ingredient.fromNetwork(pBuffer);
-            final List<WeightedEntry.Wrapper<ItemStack>> results = pBuffer.readWithCodec(net.minecraft.nbt.NbtOps.INSTANCE, WEIGHTED_ENTRY_OR_LIST_CODEC);
-            return new AnalyzerRecipe(pRecipeId, input, results);
-        }
-
-        @Override
-        public void toNetwork(FriendlyByteBuf pBuffer, AnalyzerRecipe pRecipe) {
-            pRecipe.input.toNetwork(pBuffer);
-            pBuffer.writeWithCodec(net.minecraft.nbt.NbtOps.INSTANCE, WEIGHTED_ENTRY_OR_LIST_CODEC, pRecipe.results);
+        public StreamCodec<RegistryFriendlyByteBuf, AnalyzerRecipe> streamCodec() {
+            return STREAM_CODEC;
         }
     }
 }

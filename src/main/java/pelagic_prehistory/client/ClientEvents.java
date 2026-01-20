@@ -1,14 +1,12 @@
 package pelagic_prehistory.client;
 
-import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
-import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import pelagic_prehistory.PPRegistry;
 import pelagic_prehistory.client.entity.BawitiusRenderer;
@@ -32,9 +30,9 @@ import pelagic_prehistory.item.VialItem;
 
 public final class ClientEvents {
 
-    public static void register() {
-        // TODO: Get IEventBus from constructor parameter instead.register(ModHandler.class);
-        NeoForge.EVENT_BUS.register(ForgeHandler.class);
+    public static void register(IEventBus modEventBus) {
+        modEventBus.register(ModHandler.class);
+        // ForgeHandler is empty, no need to register it
     }
 
     public static final class ModHandler {
@@ -59,7 +57,13 @@ public final class ClientEvents {
 
         @SubscribeEvent
         public static void onCommonSetup(final FMLCommonSetupEvent event) {
-            event.enqueueWork(ModHandler::onRegisterScreens);
+            // No longer needed - menu screens registered via event
+        }
+
+        @SubscribeEvent
+        public static void onRegisterMenuScreens(final RegisterMenuScreensEvent event) {
+            event.register(PPRegistry.MenuReg.ANALYZER.get(), AnalyzerScreen::new);
+            event.register(PPRegistry.MenuReg.INFUSER.get(), InfuserScreen::new);
         }
 
         @SubscribeEvent
@@ -69,18 +73,7 @@ public final class ClientEvents {
                     return vial.getColor();
                 }
                 return -1;
-            }, PPRegistry.ItemReg.getVialItems().stream().map(RegistryObject::get).toList().toArray(new Item[0]));
+            }, PPRegistry.ItemReg.getVialItems().stream().map(DeferredHolder::get).toList().toArray(new Item[0]));
         }
-
-        private static void onRegisterScreens() {
-            // TODO: MenuScreens.register is now private - use RegisterMenuScreensEvent
-// /* TODO: MenuScreens.register is private in 1.21 - use RegisterMenuScreensEvent */ MenuScreens.register(PPRegistry.MenuReg.ANALYZER.get(), AnalyzerScreen::new);
-            // TODO: MenuScreens.register is now private - use RegisterMenuScreensEvent
-// /* TODO: MenuScreens.register is private in 1.21 - use RegisterMenuScreensEvent */ MenuScreens.register(PPRegistry.MenuReg.INFUSER.get(), InfuserScreen::new);
-        }
-    }
-
-    public static final class ForgeHandler {
-
     }
 }

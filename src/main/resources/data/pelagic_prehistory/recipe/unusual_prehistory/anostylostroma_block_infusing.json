@@ -1,25 +1,18 @@
 {
-  "type": "forge:conditional",
-  "recipes": [
+  "neoforge:conditions": [
     {
-      "conditions": [
-        {
-          "type": "forge:mod_loaded",
-          "modid": "unusualprehistory"
-        }
-      ],
-      "recipe": {
-        "type": "pelagic_prehistory:infusing",
-        "ingredient": {
-          "item": "unusualprehistory:anostylostroma_flask"
-        },
-        "base": {
-          "item": "unusualprehistory:organic_ooze"
-        },
-        "result": {
-          "item": "unusualprehistory:anostylostroma_block"
-        }
-      }
+      "type": "neoforge:mod_loaded",
+      "modid": "unusualprehistory"
     }
-  ]
+  ],
+  "type": "pelagic_prehistory:infusing",
+  "ingredient": {
+    "item": "unusualprehistory:anostylostroma_flask"
+  },
+  "base": {
+    "item": "unusualprehistory:organic_ooze"
+  },
+  "result": {
+    "item": "unusualprehistory:anostylostroma_block"
+  }
 }

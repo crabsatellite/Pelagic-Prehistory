@@ -31,9 +31,7 @@
     "subtitle": "subtitles.entity.pelagic_prehistory.plesiosaurus.death"
   },
   "entity.pliosaurus.ambient": {
-    "sounds": [
-      "pelagic_prehistory:pliosaurus_ambient"
-    ],
+    "sounds": ["pelagic_prehistory:pliosaurus_ambient"],
     "subtitle": "subtitles.entity.pelagic_prehistory.pliosaurus.ambient"
   },
   "entity.pliosaurus.hurt": {
@@ -73,5 +71,35 @@
   "entity.shonisaurus.death": {
     "sounds": ["pelagic_prehistory:shonisaurus_death"],
     "subtitle": "subtitles.entity.pelagic_prehistory.shonisaurus.death"
+  },
+  "entity.eurhinosaurus.ambient": {
+    "sounds": [
+      "pelagic_prehistory:eurhinosaurus_ambient_1",
+      "pelagic_prehistory:eurhinosaurus_ambient_2"
+    ],
+    "subtitle": "subtitles.entity.pelagic_prehistory.eurhinosaurus.ambient"
+  },
+  "entity.eurhinosaurus.hurt": {
+    "sounds": ["pelagic_prehistory:eurhinosaurus_hurt"],
+    "subtitle": "subtitles.entity.pelagic_prehistory.eurhinosaurus.hurt"
+  },
+  "entity.eurhinosaurus.death": {
+    "sounds": ["pelagic_prehistory:eurhinosaurus_death"],
+    "subtitle": "subtitles.entity.pelagic_prehistory.eurhinosaurus.death"
+  },
+  "entity.spinosaurus.ambient": {
+    "sounds": [
+      "pelagic_prehistory:spinosaurus_ambient",
+      "pelagic_prehistory:spinosaurus_broadcast"
+    ],
+    "subtitle": "subtitles.entity.pelagic_prehistory.spinosaurus.ambient"
+  },
+  "entity.spinosaurus.hurt": {
+    "sounds": ["pelagic_prehistory:spinosaurus_hurt"],
+    "subtitle": "subtitles.entity.pelagic_prehistory.spinosaurus.hurt"
+  },
+  "entity.spinosaurus.death": {
+    "sounds": ["pelagic_prehistory:spinosaurus_death"],
+    "subtitle": "subtitles.entity.pelagic_prehistory.spinosaurus.death"
   }
 }

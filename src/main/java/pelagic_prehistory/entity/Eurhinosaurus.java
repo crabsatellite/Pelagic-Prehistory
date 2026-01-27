@@ -149,7 +149,7 @@ public class Eurhinosaurus extends WaterAnimal implements GeoEntity {
     //// GECKOLIB ////
 
     private PlayState handleAnimation(AnimationState<Eurhinosaurus> state) {
-        if (this.isInWaterOrBubble()) {
+        if (this.isInWater()) {
             state.getController().setAnimation(ANIM_SWIM);
         } else {
             state.getController().setAnimation(ANIM_DRY_OUT);

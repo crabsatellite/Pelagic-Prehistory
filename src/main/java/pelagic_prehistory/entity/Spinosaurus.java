@@ -152,6 +152,11 @@ public class Spinosaurus extends PathfinderMob implements NeutralMob, GeoEntity 
     }
 
     @Override
+    public boolean canBreatheUnderwater() {
+        return true;
+    }
+
+    @Override
     public boolean requiresCustomPersistence() {
         return true;
     }

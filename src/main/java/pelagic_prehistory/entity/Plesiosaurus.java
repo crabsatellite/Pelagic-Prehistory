@@ -128,19 +128,19 @@ public class Plesiosaurus extends WaterAnimal implements GeoEntity {
     @Nullable
     @Override
     protected SoundEvent getAmbientSound() {
-        return super.getAmbientSound(); //PPRegistry.SoundReg.PLESIOSAURUS_AMBIENT.get();
+        return PPRegistry.SoundReg.PLESIOSAURUS_AMBIENT.get();
     }
 
     @Nullable
     @Override
     protected SoundEvent getHurtSound(DamageSource pDamageSource) {
-        return super.getHurtSound(pDamageSource); // PPRegistry.SoundReg.PLESIOSAURUS_HURT.get();
+        return PPRegistry.SoundReg.PLESIOSAURUS_HURT.get();
     }
 
     @Nullable
     @Override
     protected SoundEvent getDeathSound() {
-        return super.getDeathSound(); //PPRegistry.SoundReg.PLESIOSAURUS_DEATH.get();
+        return PPRegistry.SoundReg.PLESIOSAURUS_DEATH.get();
     }
 
     //// NBT ////

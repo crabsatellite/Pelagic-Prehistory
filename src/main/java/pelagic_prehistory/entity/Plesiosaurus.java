@@ -4,10 +4,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingLookControl;
@@ -22,6 +20,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
+import pelagic_prehistory.PPRegistry;
 import pelagic_prehistory.entity.goal.BreachGoal;
 import pelagic_prehistory.entity.goal.FloppingGoal;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -120,19 +119,19 @@ public class Plesiosaurus extends WaterAnimal implements GeoEntity {
     @Nullable
     @Override
     protected SoundEvent getAmbientSound() {
-        return super.getAmbientSound(); //PPRegistry.SoundReg.PLESIOSAURUS_AMBIENT.get();
+        return PPRegistry.SoundReg.PLESIOSAURUS_AMBIENT.get();
     }
 
     @Nullable
     @Override
     protected SoundEvent getHurtSound(DamageSource pDamageSource) {
-        return super.getHurtSound(pDamageSource); // PPRegistry.SoundReg.PLESIOSAURUS_HURT.get();
+        return PPRegistry.SoundReg.PLESIOSAURUS_HURT.get();
     }
 
     @Nullable
     @Override
     protected SoundEvent getDeathSound() {
-        return super.getDeathSound(); //PPRegistry.SoundReg.PLESIOSAURUS_DEATH.get();
+        return PPRegistry.SoundReg.PLESIOSAURUS_DEATH.get();
     }
 
     //// NBT ////

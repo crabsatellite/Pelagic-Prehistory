@@ -32,13 +32,18 @@ public class PrognathodonModel<T extends Prognathodon> extends SimplePitchGeoMod
 
     @Override
     protected void rotateHead(T animatable, long instanceId, AnimationState<T> animationState) {
+        // Disable head rotation when on land (beached) to prevent spinning
+        if (!animatable.isInWaterOrBubble()) {
+            return;
+        }
+        
         Optional<GeoBone> oHead = getHeadBone();
         Optional<GeoBone> oNeck = getNeckBone();
         if(oHead.isPresent() && oNeck.isPresent()) {
             final GeoBone head = oHead.get();
             final GeoBone neck = oNeck.get();
             Vec2 rotations = getHeadRotations(animatable, instanceId, animationState).scale(0.5F);
-            // Clamp rotations to prevent 360 degree spinning on land
+            // Clamp rotations for safety
             float clampedX = Mth.clamp(rotations.x, -MAX_HEAD_ROT, MAX_HEAD_ROT);
             float clampedY = Mth.clamp(rotations.y, -MAX_HEAD_ROT, MAX_HEAD_ROT);
             head.setRotX(head.getRotX() + clampedX);
